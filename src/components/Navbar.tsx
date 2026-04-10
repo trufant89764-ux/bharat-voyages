@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Heart } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const { user, signOut } = useAuth();
 
   return (
     <motion.header
@@ -50,12 +52,37 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/destinations"
-            className="font-body text-sm font-medium px-5 py-2.5 rounded-full gold-gradient text-accent-foreground hover:opacity-90 transition-opacity"
-          >
-            Book Now
-          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-2 font-body text-sm font-medium px-4 py-2.5 rounded-full border border-border text-foreground hover:bg-muted transition-colors"
+              >
+                <User size={16} /> Dashboard
+              </Link>
+              <button
+                onClick={signOut}
+                className="font-body text-sm font-medium px-4 py-2.5 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <LogOut size={16} />
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/auth"
+                className="font-body text-sm font-medium px-4 py-2.5 rounded-full border border-border text-foreground hover:bg-muted transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/destinations"
+                className="font-body text-sm font-medium px-5 py-2.5 rounded-full gold-gradient text-accent-foreground hover:opacity-90 transition-opacity"
+              >
+                Book Now
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -90,13 +117,24 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/destinations"
-                onClick={() => setOpen(false)}
-                className="font-body text-sm font-medium px-5 py-2.5 rounded-full gold-gradient text-accent-foreground text-center"
-              >
-                Book Now
-              </Link>
+              {user ? (
+                <>
+                  <Link to="/dashboard" onClick={() => setOpen(false)} className="font-body text-sm font-medium py-2 text-foreground hover:text-primary transition-colors">
+                    Dashboard
+                  </Link>
+                  <button onClick={() => { signOut(); setOpen(false); }} className="font-body text-sm font-medium py-2 text-left text-muted-foreground hover:text-foreground transition-colors">
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/auth"
+                  onClick={() => setOpen(false)}
+                  className="font-body text-sm font-medium px-5 py-2.5 rounded-full gold-gradient text-accent-foreground text-center"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
