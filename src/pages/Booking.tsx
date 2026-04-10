@@ -1,25 +1,78 @@
-import { useState, useMemo } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useState } from "react";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Calendar, Users, CreditCard, Check, ArrowLeft } from "lucide-react";
 import { destinations } from "@/data/destinations";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const Booking = () => {
   const [searchParams] = useSearchParams();
   const destId = searchParams.get("destination");
-  const dest = destId ? destinations.find((d) => d.id === destId) : null;
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [selectedDest, setSelectedDest] = useState(destId || "");
   const [date, setDate] = useState("");
   const [people, setPeople] = useState(2);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
+  const [bookingId, setBookingId] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const activeDest = destinations.find((d) => d.id === selectedDest);
   const totalPrice = activeDest ? activeDest.price * people : 0;
 
-  const handleConfirm = () => {
-    setConfirmed(true);
+  const handleConfirm = async () => {
+    if (!user) {
+      toast.error("Please sign in to book");
+      navigate("/auth");
+      return;
+    }
+    if (!activeDest) return;
+
+    setSubmitting(true);
+
+    // Find matching destination in DB by title
+    const { data: dbDest } = await supabase
+      .from("destinations")
+      .select("id")
+      .eq("title", activeDest.title)
+      .maybeSingle();
+
+    const destinationId = dbDest?.id;
+
+    if (!destinationId) {
+      // If destination not seeded yet, just do a mock booking
+      setBookingId("EB-" + Math.random().toString(36).substring(2, 10).toUpperCase());
+      setConfirmed(true);
+      setSubmitting(false);
+      toast.success("Booking confirmed!");
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("bookings")
+      .insert({
+        user_id: user.id,
+        destination_id: destinationId,
+        booking_date: date,
+        persons: people,
+        total_price: totalPrice,
+        status: "confirmed",
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      toast.error("Booking failed: " + error.message);
+    } else {
+      setBookingId(data.id.substring(0, 8).toUpperCase());
+      setConfirmed(true);
+      toast.success("Booking confirmed!");
+    }
+    setSubmitting(false);
   };
 
   if (confirmed && activeDest) {
@@ -40,15 +93,21 @@ const Booking = () => {
           <p className="font-display text-2xl font-bold text-primary mb-6">
             ₹{totalPrice.toLocaleString("en-IN")}
           </p>
-          <p className="text-muted-foreground text-xs mb-6">
-            Booking ID: EB-{Math.random().toString(36).substring(2, 10).toUpperCase()}
-          </p>
-          <Link
-            to="/"
-            className="inline-block px-6 py-3 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity"
-          >
-            Back to Home
-          </Link>
+          <p className="text-muted-foreground text-xs mb-6">Booking ID: {bookingId}</p>
+          <div className="flex gap-3 justify-center">
+            <Link
+              to="/dashboard"
+              className="inline-block px-6 py-3 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity"
+            >
+              View Bookings
+            </Link>
+            <Link
+              to="/"
+              className="inline-block px-6 py-3 rounded-xl border border-border text-foreground font-medium hover:bg-muted transition-colors"
+            >
+              Home
+            </Link>
+          </div>
         </motion.div>
       </div>
     );
@@ -61,17 +120,18 @@ const Booking = () => {
           <ArrowLeft size={16} /> Back to Destinations
         </Link>
 
+        {!user && (
+          <div className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20 text-sm text-foreground">
+            <Link to="/auth" className="text-primary font-medium hover:underline">Sign in</Link> to save your booking to your account.
+          </div>
+        )}
+
         <h1 className="font-display text-3xl font-bold text-foreground mb-8">Book Your Trip</h1>
 
-        {/* Step indicators */}
         <div className="flex items-center gap-4 mb-10">
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center gap-2">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                  step >= s ? "gold-gradient text-accent-foreground" : "bg-muted text-muted-foreground"
-                }`}
-              >
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${step >= s ? "gold-gradient text-accent-foreground" : "bg-muted text-muted-foreground"}`}>
                 {step > s ? <Check size={14} /> : s}
               </div>
               <span className="text-sm text-muted-foreground hidden sm:inline">
@@ -86,49 +146,25 @@ const Booking = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
             <div>
               <label className="text-sm font-medium text-foreground block mb-2">Destination</label>
-              <select
-                value={selectedDest}
-                onChange={(e) => setSelectedDest(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              >
+              <select value={selectedDest} onChange={(e) => setSelectedDest(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary">
                 <option value="">Select a destination</option>
                 {destinations.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.title} — ₹{d.price.toLocaleString("en-IN")}/person
-                  </option>
+                  <option key={d.id} value={d.id}>{d.title} — ₹{d.price.toLocaleString("en-IN")}/person</option>
                 ))}
               </select>
             </div>
-
             <div>
               <label className="text-sm font-medium text-foreground block mb-2">Travel Date</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
-
             <div>
               <label className="text-sm font-medium text-foreground block mb-2">Number of Travelers</label>
               <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setPeople(Math.max(1, people - 1))}
-                  className="w-10 h-10 rounded-lg border border-border text-foreground hover:bg-muted transition-colors"
-                >
-                  −
-                </button>
+                <button onClick={() => setPeople(Math.max(1, people - 1))} className="w-10 h-10 rounded-lg border border-border text-foreground hover:bg-muted transition-colors">−</button>
                 <span className="font-display text-xl font-bold text-foreground w-8 text-center">{people}</span>
-                <button
-                  onClick={() => setPeople(Math.min(12, people + 1))}
-                  className="w-10 h-10 rounded-lg border border-border text-foreground hover:bg-muted transition-colors"
-                >
-                  +
-                </button>
+                <button onClick={() => setPeople(Math.min(12, people + 1))} className="w-10 h-10 rounded-lg border border-border text-foreground hover:bg-muted transition-colors">+</button>
               </div>
             </div>
-
             {activeDest && (
               <div className="p-4 rounded-xl bg-muted">
                 <div className="flex justify-between text-sm">
@@ -137,12 +173,7 @@ const Booking = () => {
                 </div>
               </div>
             )}
-
-            <button
-              onClick={() => setStep(2)}
-              disabled={!selectedDest || !date}
-              className="w-full px-6 py-3.5 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <button onClick={() => setStep(2)} disabled={!selectedDest || !date} className="w-full px-6 py-3.5 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
               Continue
             </button>
           </motion.div>
@@ -164,12 +195,8 @@ const Booking = () => {
               </div>
             </div>
             <div className="flex gap-3">
-              <button onClick={() => setStep(1)} className="flex-1 px-6 py-3.5 rounded-xl border border-border text-foreground font-medium hover:bg-muted transition-colors">
-                Back
-              </button>
-              <button onClick={() => setStep(3)} className="flex-1 px-6 py-3.5 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity">
-                Proceed to Payment
-              </button>
+              <button onClick={() => setStep(1)} className="flex-1 px-6 py-3.5 rounded-xl border border-border text-foreground font-medium hover:bg-muted transition-colors">Back</button>
+              <button onClick={() => setStep(3)} className="flex-1 px-6 py-3.5 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity">Proceed to Payment</button>
             </div>
           </motion.div>
         )}
@@ -198,11 +225,9 @@ const Booking = () => {
               <p className="text-primary font-bold text-lg text-right">Total: ₹{totalPrice.toLocaleString("en-IN")}</p>
             </div>
             <div className="flex gap-3">
-              <button onClick={() => setStep(2)} className="flex-1 px-6 py-3.5 rounded-xl border border-border text-foreground font-medium hover:bg-muted transition-colors">
-                Back
-              </button>
-              <button onClick={handleConfirm} className="flex-1 px-6 py-3.5 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity">
-                Confirm & Pay
+              <button onClick={() => setStep(2)} className="flex-1 px-6 py-3.5 rounded-xl border border-border text-foreground font-medium hover:bg-muted transition-colors">Back</button>
+              <button onClick={handleConfirm} disabled={submitting} className="flex-1 px-6 py-3.5 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
+                {submitting ? "Processing..." : "Confirm & Pay"}
               </button>
             </div>
           </motion.div>
