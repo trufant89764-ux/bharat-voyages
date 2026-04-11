@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -42,7 +43,7 @@ const Navbar = () => {
                 location.pathname === link.to
                   ? "text-primary"
                   : isHome
-                  ? "text-primary-foreground/80"
+                  ? "text-white/80"
                   : "text-muted-foreground"
               }`}
             >
@@ -52,6 +53,7 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
           {user ? (
             <>
               <Link
@@ -85,17 +87,20 @@ const Navbar = () => {
           )}
         </div>
 
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden p-2"
-          aria-label="Toggle menu"
-        >
-          {open ? (
-            <X className={isHome ? "text-primary-foreground" : "text-foreground"} />
-          ) : (
-            <Menu className={isHome ? "text-primary-foreground" : "text-foreground"} />
-          )}
-        </button>
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            onClick={() => setOpen(!open)}
+            className="p-2"
+            aria-label="Toggle menu"
+          >
+            {open ? (
+              <X className={isHome ? "text-white" : "text-foreground"} />
+            ) : (
+              <Menu className={isHome ? "text-white" : "text-foreground"} />
+            )}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>

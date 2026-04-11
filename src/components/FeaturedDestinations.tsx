@@ -2,8 +2,7 @@ import { motion } from "framer-motion";
 import { Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { destinations } from "@/data/destinations";
-
-const featured = destinations.slice(0, 4);
+import AutoCarousel from "./AutoCarousel";
 
 const FeaturedDestinations = () => (
   <section className="section-padding bg-background">
@@ -20,53 +19,45 @@ const FeaturedDestinations = () => (
         </h2>
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {featured.map((dest, i) => (
-          <motion.div
+      <AutoCarousel autoplayInterval={4000}>
+        {destinations.slice(0, 10).map((dest) => (
+          <Link
             key={dest.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
+            to={`/destination/${dest.id}`}
+            className="group block rounded-2xl overflow-hidden bg-card border border-border hover:shadow-xl transition-shadow duration-300 h-full"
           >
-            <Link
-              to={`/destination/${dest.id}`}
-              className="group block rounded-2xl overflow-hidden bg-card border border-border hover:shadow-xl transition-shadow duration-300"
-            >
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={dest.image}
-                  alt={dest.title}
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium glass text-primary-foreground">
-                  {dest.category}
+            <div className="relative h-52 overflow-hidden">
+              <img
+                src={dest.image}
+                alt={dest.title}
+                loading="lazy"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium glass text-white">
+                {dest.category}
+              </span>
+            </div>
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="font-display text-lg font-semibold text-foreground">{dest.title}</h3>
+                <div className="flex items-center gap-1 text-accent">
+                  <Star size={14} fill="currentColor" />
+                  <span className="text-xs font-medium">{dest.rating}</span>
+                </div>
+              </div>
+              <p className="text-muted-foreground text-xs mb-2">{dest.state}</p>
+              <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{dest.shortDesc}</p>
+              <div className="flex items-center justify-between">
+                <span className="font-body text-primary font-bold text-sm">
+                  ₹{dest.price.toLocaleString("en-IN")}
+                  <span className="text-muted-foreground font-normal text-xs"> /person</span>
                 </span>
+                <ArrowRight size={16} className="text-primary group-hover:translate-x-1 transition-transform" />
               </div>
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="font-display text-lg font-semibold text-foreground">{dest.title}</h3>
-                  <div className="flex items-center gap-1 text-accent">
-                    <Star size={14} fill="currentColor" />
-                    <span className="text-xs font-medium">{dest.rating}</span>
-                  </div>
-                </div>
-                <p className="text-muted-foreground text-xs mb-3">{dest.state}</p>
-                <div className="flex items-center justify-between">
-                  <span className="font-body text-primary font-bold text-sm">
-                    ₹{dest.price.toLocaleString("en-IN")}
-                    <span className="text-muted-foreground font-normal text-xs"> /person</span>
-                  </span>
-                  <ArrowRight size={16} className="text-primary group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            </Link>
-          </motion.div>
+            </div>
+          </Link>
         ))}
-      </div>
+      </AutoCarousel>
 
       <div className="text-center mt-10">
         <Link
