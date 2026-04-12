@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Compass, Mountain, Waves, Camera, Tent, Utensils } from "lucide-react";
 
 const experiences = [
@@ -13,26 +12,17 @@ const experiences = [
 const ExperiencesSection = () => (
   <section className="section-padding bg-background">
     <div className="container-custom">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center mb-12"
-      >
+      <div className="text-center mb-12">
         <p className="font-body text-primary text-sm tracking-[0.2em] uppercase mb-2">What Awaits</p>
         <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
           Experiences
         </h2>
-      </motion.div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {experiences.map((exp, i) => (
-          <motion.div
+        {experiences.map((exp) => (
+          <div
             key={exp.title}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.08 }}
             className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <div className={`w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${exp.color}`}>
@@ -40,7 +30,7 @@ const ExperiencesSection = () => (
             </div>
             <h3 className="font-display text-lg font-semibold text-foreground mb-2">{exp.title}</h3>
             <p className="text-muted-foreground text-sm">{exp.desc}</p>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

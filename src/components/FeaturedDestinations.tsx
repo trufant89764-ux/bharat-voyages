@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { destinations } from "@/data/destinations";
@@ -7,17 +6,12 @@ import AutoCarousel from "./AutoCarousel";
 const FeaturedDestinations = () => (
   <section className="section-padding bg-background">
     <div className="container-custom">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center mb-12"
-      >
+      <div className="text-center mb-12">
         <p className="font-body text-primary text-sm tracking-[0.2em] uppercase mb-2">Top Picks</p>
         <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
           Featured Destinations
         </h2>
-      </motion.div>
+      </div>
 
       <AutoCarousel autoplayInterval={4000}>
         {destinations.slice(0, 10).map((dest) => (
