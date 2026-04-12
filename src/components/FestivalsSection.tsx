@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Star, ArrowRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { destinations } from "@/data/destinations";
@@ -9,12 +8,7 @@ const festivals = destinations.filter((d) => d.category === "Festivals");
 const FestivalsSection = () => (
   <section className="section-padding bg-card">
     <div className="container-custom">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center mb-12"
-      >
+      <div className="text-center mb-12">
         <p className="font-body text-primary text-sm tracking-[0.2em] uppercase mb-2">
           <Calendar size={14} className="inline mr-1" /> Celebrate India
         </p>
@@ -24,7 +18,7 @@ const FestivalsSection = () => (
         <p className="text-muted-foreground mt-3 max-w-2xl mx-auto text-sm">
           Immerse yourself in India's vibrant festivals — from Holi's kaleidoscope of colors to Diwali's million lamps.
         </p>
-      </motion.div>
+      </div>
 
       <AutoCarousel autoplayInterval={3500}>
         {festivals.map((dest) => (
@@ -34,12 +28,7 @@ const FestivalsSection = () => (
             className="group block rounded-2xl overflow-hidden bg-background border border-border hover:shadow-xl hover:border-primary/20 transition-all duration-300 h-full"
           >
             <div className="relative h-48 overflow-hidden">
-              <img
-                src={dest.image}
-                alt={dest.title}
-                loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
+              <img src={dest.image} alt={dest.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3">
                 <h3 className="font-display text-lg font-semibold text-white">{dest.title}</h3>
