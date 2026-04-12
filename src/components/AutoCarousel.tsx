@@ -10,6 +10,7 @@ const AutoCarousel = ({ children, autoplayInterval = 3000 }: AutoCarouselProps) 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const isPaused = useRef(false);
 
   const updateScrollState = () => {
     const el = scrollRef.current;
@@ -21,8 +22,8 @@ const AutoCarousel = ({ children, autoplayInterval = 3000 }: AutoCarouselProps) 
   const scroll = (dir: "left" | "right") => {
     const el = scrollRef.current;
     if (!el) return;
-    const amount = el.clientWidth * 0.7;
-    el.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+    const cardWidth = el.querySelector<HTMLElement>(":scope > div")?.offsetWidth || el.clientWidth * 0.3;
+    el.scrollBy({ left: dir === "left" ? -cardWidth - 24 : cardWidth + 24, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -33,21 +34,29 @@ const AutoCarousel = ({ children, autoplayInterval = 3000 }: AutoCarouselProps) 
     return () => el.removeEventListener("scroll", updateScrollState);
   }, []);
 
+  // Pause autoplay on hover
+  const handleMouseEnter = () => { isPaused.current = true; };
+  const handleMouseLeave = () => { isPaused.current = false; };
+
   useEffect(() => {
     const timer = setInterval(() => {
+      if (isPaused.current) return;
       const el = scrollRef.current;
       if (!el) return;
-      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 5) {
+      const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 5;
+      if (atEnd) {
+        // Smooth scroll back to start
         el.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        el.scrollBy({ left: el.clientWidth * 0.7, behavior: "smooth" });
+        const cardWidth = el.querySelector<HTMLElement>(":scope > div")?.offsetWidth || el.clientWidth * 0.3;
+        el.scrollBy({ left: cardWidth + 24, behavior: "smooth" });
       }
     }, autoplayInterval);
     return () => clearInterval(timer);
   }, [autoplayInterval]);
 
   return (
-    <div className="relative group">
+    <div className="relative group" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <div
         ref={scrollRef}
         className="flex gap-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4"
