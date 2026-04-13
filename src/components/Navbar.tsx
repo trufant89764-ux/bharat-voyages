@@ -8,6 +8,8 @@ import ThemeToggle from "./ThemeToggle";
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/destinations", label: "Destinations" },
+  { to: "/destinations?category=Festivals", label: "Festivals" },
+  { to: "/destinations?category=Craft", label: "Crafts" },
   { to: "/booking", label: "Bookings" },
 ];
 
