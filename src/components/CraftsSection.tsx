@@ -2,6 +2,7 @@ import { Star, ArrowRight, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
 import { destinations } from "@/data/destinations";
 import AutoCarousel from "./AutoCarousel";
+import SafeImage from "./SafeImage";
 
 const crafts = destinations.filter((d) => d.category === "Craft");
 
@@ -28,7 +29,7 @@ const CraftsSection = () => (
             className="group block rounded-2xl overflow-hidden bg-card border border-border hover:shadow-xl hover:border-accent/30 transition-all duration-300 h-full"
           >
             <div className="relative h-48 overflow-hidden">
-              <img src={dest.image} alt={dest.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <SafeImage src={dest.image} alt={dest.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <div className="p-5">
               <div className="flex items-center justify-between mb-1">

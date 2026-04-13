@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, MapPin, Clock, Users, ArrowLeft, Check, Send } from "lucide-react";
 import { destinations } from "@/data/destinations";
+import SafeImage from "@/components/SafeImage";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -109,13 +110,13 @@ const DestinationDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl overflow-hidden">
-              <img src={dest.gallery[activeImg] || dest.image} alt={dest.title} width={800} height={600} className="w-full h-72 sm:h-96 object-cover" />
+              <SafeImage src={dest.gallery[activeImg] || dest.image} alt={dest.title} width={800} height={600} className="w-full h-72 sm:h-96 object-cover" />
             </motion.div>
             {dest.gallery.length > 1 && (
               <div className="flex gap-3">
                 {dest.gallery.map((img, i) => (
                   <button key={i} onClick={() => setActiveImg(i)} className={`w-20 h-14 rounded-lg overflow-hidden border-2 transition-colors ${activeImg === i ? "border-primary" : "border-transparent"}`}>
-                    <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" width={80} height={56} />
+                    <SafeImage src={img} alt="" className="w-full h-full object-cover" loading="lazy" width={80} height={56} />
                   </button>
                 ))}
               </div>

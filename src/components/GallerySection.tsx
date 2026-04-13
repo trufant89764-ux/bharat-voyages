@@ -1,4 +1,5 @@
 import { destinations } from "@/data/destinations";
+import SafeImage from "./SafeImage";
 
 const galleryItems = destinations.slice(0, 8);
 
@@ -18,7 +19,7 @@ const GallerySection = () => (
               i === 0 || i === 5 ? "md:col-span-2 md:row-span-2" : ""
             }`}
           >
-            <img
+            <SafeImage
               src={dest.image}
               alt={dest.title}
               loading="lazy"
