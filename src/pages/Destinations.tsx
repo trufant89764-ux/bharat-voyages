@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SafeImage from "@/components/SafeImage";
 import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, ArrowRight, Search, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
@@ -116,7 +117,7 @@ const Destinations = () => {
               <motion.div key={dest.id} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                 <Link to={`/destination/${dest.id}`} className="group block rounded-2xl overflow-hidden bg-card border border-border hover:shadow-xl transition-shadow">
                   <div className="relative h-56 overflow-hidden">
-                    <img src={dest.image} alt={dest.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <SafeImage src={dest.image} alt={dest.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium glass text-primary-foreground">{dest.category}</span>
                   </div>
                   <div className="p-5">
