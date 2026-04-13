@@ -29,7 +29,7 @@ const FestivalsSection = () => (
             className="group block rounded-2xl overflow-hidden bg-background border border-border hover:shadow-xl hover:border-primary/20 transition-all duration-300 h-full"
           >
             <div className="relative h-48 overflow-hidden">
-              <img src={dest.image} alt={dest.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <SafeImage src={dest.image} alt={dest.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3">
                 <h3 className="font-display text-lg font-semibold text-white">{dest.title}</h3>

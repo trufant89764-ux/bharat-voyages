@@ -22,7 +22,7 @@ const FeaturedDestinations = () => (
             className="group block rounded-2xl overflow-hidden bg-card border border-border hover:shadow-xl transition-shadow duration-300 h-full"
           >
             <div className="relative h-52 overflow-hidden">
-              <img
+              <SafeImage
                 src={dest.image}
                 alt={dest.title}
                 loading="lazy"
