@@ -1,4 +1,5 @@
 import { destinations } from "@/data/destinations";
+import SafeImage from "./SafeImage";
 
 const galleryItems = destinations.slice(0, 8);
 

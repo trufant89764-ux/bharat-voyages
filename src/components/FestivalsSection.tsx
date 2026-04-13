@@ -2,6 +2,7 @@ import { Star, ArrowRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { destinations } from "@/data/destinations";
 import AutoCarousel from "./AutoCarousel";
+import SafeImage from "./SafeImage";
 
 const festivals = destinations.filter((d) => d.category === "Festivals");
 

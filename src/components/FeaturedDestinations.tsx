@@ -2,6 +2,7 @@ import { Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { destinations } from "@/data/destinations";
 import AutoCarousel from "./AutoCarousel";
+import SafeImage from "./SafeImage";
 
 const FeaturedDestinations = () => (
   <section className="section-padding bg-background">
