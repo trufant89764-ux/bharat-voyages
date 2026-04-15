@@ -8,23 +8,18 @@ import GallerySection from "@/components/GallerySection";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
 
-const Index = () => {
-  return (
-    <div>
-      <HeroSection />
-      <div style={{ padding: "40px", background: "red", color: "white", fontSize: "24px" }}>
-        DEBUG: If you see this, sections below should render too
-      </div>
-      <FeaturedDestinations />
-      <Categories />
-      <ExperiencesSection />
-      <FestivalsSection />
-      <CraftsSection />
-      <GallerySection />
-      <Testimonials />
-      <CTASection />
-    </div>
-  );
-};
+const Index = () => (
+  <>
+    <HeroSection />
+    <FeaturedDestinations />
+    <Categories />
+    <ExperiencesSection />
+    <FestivalsSection />
+    <CraftsSection />
+    <GallerySection />
+    <Testimonials />
+    <CTASection />
+  </>
+);
 
 export default Index;
