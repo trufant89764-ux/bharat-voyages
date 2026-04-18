@@ -37,21 +37,29 @@ const Navbar = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`font-body text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === link.to
-                  ? "text-primary"
-                  : isHome
-                  ? "text-white/80"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const [linkPath, linkQuery] = link.to.split("?");
+            const linkCategory = new URLSearchParams(linkQuery || "").get("category");
+            const currentCategory = new URLSearchParams(location.search).get("category");
+            const isActive =
+              location.pathname === linkPath &&
+              (linkCategory ? currentCategory === linkCategory : !currentCategory);
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`font-body text-sm font-medium transition-colors hover:text-primary ${
+                  isActive
+                    ? "text-primary"
+                    : isHome
+                    ? "text-white/90"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
