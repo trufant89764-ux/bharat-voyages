@@ -1,90 +1,87 @@
 import { useState, useMemo } from "react";
 
-const buildUrl = (id: string, w = 1200) =>
-  `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
+// Map destination keywords → Unsplash search keywords for relevant images
+// Uses source.unsplash.com which always returns a working image matching keywords
+const KEYWORD_MAP: Array<{ match: RegExp; keywords: string }> = [
+  // Festivals — specific
+  { match: /diwali/i, keywords: "diwali,diya,lamps,india" },
+  { match: /holi/i, keywords: "holi,colors,india,festival" },
+  { match: /navratri|garba/i, keywords: "garba,navratri,gujarat,dance" },
+  { match: /durga\s*puja/i, keywords: "durga,puja,kolkata,goddess" },
+  { match: /onam/i, keywords: "onam,kerala,flowers,pookalam" },
+  { match: /kumbh/i, keywords: "kumbh,mela,ganges,pilgrims" },
+  { match: /rann\s*utsav/i, keywords: "kutch,rann,white,desert" },
+  { match: /pushkar/i, keywords: "pushkar,camel,fair,rajasthan" },
 
-// Title-specific high-quality Indian tourism images (verified Unsplash IDs)
-const TITLE_MAP: Record<string, string> = {
-  // Festivals
-  "diwali": "photo-1605302329851-6d44a3df1cf2", // Diwali diyas/lamps
-  "holi": "photo-1617526715998-19fab8be35a6", // Holi colors
-  "navratri": "photo-1601132359864-c974e79890ac", // Garba dance
-  "durga puja": "photo-1604608672516-f1b9b1d2f7e7", // Durga idol
-  "onam": "photo-1602216056096-3b40cc0c9944", // Kerala flowers
-  "kumbh": "photo-1567604130959-7ea7ab2a7f10", // Ganges/pilgrims
-  "rann utsav": "photo-1609766857041-ed402ea8069a", // White desert Kutch
-
-  // Mountains / Heritage
-  "ladakh": "photo-1589308078055-3df265d28b8a", // Pangong/Ladakh
-  "kashmir": "photo-1566837945700-30057527ade0", // Dal lake shikara
-  "sikkim": "photo-1626621341517-bbf3d9990a23", // Sikkim mountains
-  "darjeeling": "photo-1544634076-a90160ddf44c", // Darjeeling tea
-  "meghalaya": "photo-1626714932503-a6e6e9f00c81", // Living root bridge
-  "shimla": "photo-1626714932503-a6e6e9f00c81",
-  "manali": "photo-1626621341517-bbf3d9990a23",
+  // Mountains
+  { match: /ladakh/i, keywords: "ladakh,himalayas,monastery" },
+  { match: /kashmir/i, keywords: "kashmir,dal,lake,shikara" },
+  { match: /sikkim/i, keywords: "sikkim,himalayas,gangtok" },
+  { match: /darjeeling/i, keywords: "darjeeling,tea,plantation" },
+  { match: /meghalaya|shillong/i, keywords: "meghalaya,living,root,bridge" },
+  { match: /shimla|manali|himachal/i, keywords: "himachal,mountains,snow" },
 
   // Heritage
-  "taj mahal": "photo-1564507592333-c60657eea523", // Taj Mahal
-  "jaipur": "photo-1599661046289-e31897846e41", // Hawa Mahal
-  "udaipur": "photo-1568732417863-13668e4ca2f2", // Udaipur palace
-  "khajuraho": "photo-1604089890024-e9e5c11e3469", // Khajuraho
-  "mysore palace": "photo-1600081760099-3b8e1d3c7d6e", // Mysore palace
-  "hampi": "photo-1600100397927-b4cc9b40072e", // Hampi ruins
-  "rajasthan": "photo-1599661046289-e31897846e41",
+  { match: /taj\s*mahal/i, keywords: "taj,mahal,agra,india" },
+  { match: /jaipur|hawa\s*mahal/i, keywords: "jaipur,hawa,mahal,pink" },
+  { match: /udaipur/i, keywords: "udaipur,palace,lake,rajasthan" },
+  { match: /khajuraho/i, keywords: "khajuraho,temple,sculpture" },
+  { match: /mysore/i, keywords: "mysore,palace,karnataka" },
+  { match: /hampi/i, keywords: "hampi,ruins,karnataka,stone" },
+  { match: /rajasthan/i, keywords: "rajasthan,palace,fort,india" },
 
   // Beaches
-  "goa": "photo-1512343879784-a960bf40e7f2", // Goa beach
-  "andaman": "photo-1583212292454-1fe6229603b7", // Andaman water
-  "lakshadweep": "photo-1544551763-46a013bb70d5", // Tropical beach
-  "kerala": "photo-1602216056096-3b40cc0c9944", // Kerala backwaters
+  { match: /goa/i, keywords: "goa,beach,palm,india" },
+  { match: /andaman/i, keywords: "andaman,beach,turquoise,island" },
+  { match: /lakshadweep/i, keywords: "lakshadweep,island,lagoon" },
+  { match: /kerala|backwater/i, keywords: "kerala,backwaters,houseboat" },
 
   // Spiritual
-  "varanasi": "photo-1561361513-2d000a50f0dc", // Varanasi ghats
-  "rishikesh": "photo-1591018653829-1ae46fa9adda", // Rishikesh ganga
-  "golden temple": "photo-1588096344356-9b497e3d99c6", // Golden Temple
-  "tirupati": "photo-1582510003544-4d00b7f74220",
+  { match: /varanasi|ganges|ghat/i, keywords: "varanasi,ghats,ganges" },
+  { match: /rishikesh/i, keywords: "rishikesh,ganga,yoga" },
+  { match: /golden\s*temple|amritsar/i, keywords: "golden,temple,amritsar,sikh" },
+  { match: /tirupati|tirumala/i, keywords: "tirupati,temple,india" },
 
   // Wildlife
-  "corbett": "photo-1605552055839-15ce2e44a6e5", // Tiger
-  "ranthambore": "photo-1605552055839-15ce2e44a6e5",
-  "kaziranga": "photo-1564349683136-77e08dba1ef7", // Rhino
-  "gir": "photo-1605552055839-15ce2e44a6e5", // Lion
+  { match: /corbett|ranthambore|tiger/i, keywords: "tiger,jungle,india,wildlife" },
+  { match: /kaziranga|rhino/i, keywords: "rhino,kaziranga,assam" },
+  { match: /gir|lion/i, keywords: "lion,gir,gujarat,wildlife" },
 
   // Crafts
-  "madhubani": "photo-1582555172866-f73bb12a2ab3", // Madhubani art
-  "pashmina": "photo-1583309217394-d586f4d9e8b7", // Textile
-  "blue pottery": "photo-1607644536940-6c4ce21d2737", // Pottery
-  "channapatna": "photo-1607644536940-6c4ce21d2737",
-  "phulkari": "photo-1583309217394-d586f4d9e8b7",
-  "warli": "photo-1582555172866-f73bb12a2ab3",
-};
+  { match: /madhubani/i, keywords: "madhubani,painting,bihar,art" },
+  { match: /pashmina/i, keywords: "pashmina,shawl,kashmir,textile" },
+  { match: /blue\s*pottery/i, keywords: "blue,pottery,jaipur,ceramic" },
+  { match: /channapatna/i, keywords: "wooden,toys,handicraft,india" },
+  { match: /phulkari/i, keywords: "phulkari,embroidery,punjab,textile" },
+  { match: /warli/i, keywords: "warli,painting,tribal,art" },
+  { match: /chikankari|lucknow/i, keywords: "chikankari,embroidery,lucknow" },
+  { match: /banarasi|silk/i, keywords: "banarasi,silk,saree,weaving" },
+  { match: /craft|handicraft|weav/i, keywords: "indian,handicraft,traditional,art" },
 
-// Category fallbacks
-const CATEGORY_MAP: Record<string, string> = {
-  "festivals": "photo-1605302329851-6d44a3df1cf2",
-  "festival": "photo-1605302329851-6d44a3df1cf2",
-  "mountains": "photo-1589308078055-3df265d28b8a",
-  "heritage": "photo-1564507592333-c60657eea523",
-  "beaches": "photo-1512343879784-a960bf40e7f2",
-  "spiritual": "photo-1561361513-2d000a50f0dc",
-  "wildlife": "photo-1605552055839-15ce2e44a6e5",
-  "craft": "photo-1582555172866-f73bb12a2ab3",
-  "crafts": "photo-1582555172866-f73bb12a2ab3",
-};
+  // Category-level fallbacks
+  { match: /festival/i, keywords: "indian,festival,celebration,colorful" },
+  { match: /mountain/i, keywords: "himalayas,india,mountains" },
+  { match: /heritage/i, keywords: "india,heritage,monument,palace" },
+  { match: /beach/i, keywords: "india,beach,tropical,coast" },
+  { match: /spiritual/i, keywords: "india,temple,spiritual" },
+  { match: /wildlife/i, keywords: "india,wildlife,jungle,safari" },
+];
 
-const DEFAULT_IMG = "photo-1524492412937-b28074a5d7da"; // Taj Mahal
+const DEFAULT_KEYWORDS = "incredible,india,tourism";
+
+const buildUrl = (keywords: string, w = 800, h = 600, seed = "") => {
+  // source.unsplash.com always returns a real image matching keywords
+  // Adding seed makes the same input → same image (deterministic)
+  const seedSuffix = seed ? `&sig=${encodeURIComponent(seed).slice(0, 20)}` : "";
+  return `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(keywords)}${seedSuffix}`;
+};
 
 const pickImage = (alt: string, src: string): string => {
-  const text = `${alt} ${src}`.toLowerCase();
-  // Title keyword match (longest match wins)
-  const sortedKeys = Object.keys(TITLE_MAP).sort((a, b) => b.length - a.length);
-  for (const key of sortedKeys) {
-    if (text.includes(key)) return buildUrl(TITLE_MAP[key]);
+  const text = `${alt} ${src}`;
+  for (const { match, keywords } of KEYWORD_MAP) {
+    if (match.test(text)) return buildUrl(keywords, 800, 600, alt);
   }
-  for (const key of Object.keys(CATEGORY_MAP)) {
-    if (text.includes(key)) return buildUrl(CATEGORY_MAP[key]);
-  }
-  return buildUrl(DEFAULT_IMG);
+  return buildUrl(DEFAULT_KEYWORDS, 800, 600, alt);
 };
 
 interface SafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
