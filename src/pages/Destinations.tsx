@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SafeImage from "@/components/SafeImage";
 import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -10,12 +10,20 @@ const PAGE_SIZE = 9;
 
 const Destinations = () => {
   const [searchParams] = useSearchParams();
-  const initialCategory = searchParams.get("category") || "All";
-  const initialSearch = searchParams.get("search") || "";
+  const urlCategory = searchParams.get("category") || "All";
+  const urlSearch = searchParams.get("search") || "";
 
-  const [search, setSearch] = useState(initialSearch);
-  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [search, setSearch] = useState(urlSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
+  const [selectedCategory, setSelectedCategory] = useState(urlCategory);
+
+  // Sync state when URL search params change (e.g., clicking navbar Festivals/Crafts while on this page)
+  useEffect(() => {
+    setSelectedCategory(urlCategory);
+    setSearch(urlSearch);
+    setDebouncedSearch(urlSearch);
+    setPage(1);
+  }, [urlCategory, urlSearch]);
   const [sortBy, setSortBy] = useState<"rating" | "price-low" | "price-high">("rating");
   const [priceMin, setPriceMin] = useState<number | undefined>();
   const [priceMax, setPriceMax] = useState<number | undefined>();
