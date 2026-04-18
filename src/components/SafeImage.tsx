@@ -1,112 +1,113 @@
 import { useState, useMemo } from "react";
 
-// Only verified working Unsplash photo IDs (tested 200 OK)
-const buildUrl = (id: string, w = 800) =>
-  `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
+// Local AI-generated tourism images — guaranteed to load and contextually accurate
+import imgTaj from "@/assets/img-taj.jpg";
+import imgJaipur from "@/assets/img-jaipur.jpg";
+import imgLadakh from "@/assets/img-ladakh.jpg";
+import imgKashmir from "@/assets/img-kashmir.jpg";
+import imgKerala from "@/assets/img-kerala.jpg";
+import imgGoa from "@/assets/img-goa.jpg";
+import imgAndaman from "@/assets/img-andaman.jpg";
+import imgVaranasi from "@/assets/img-varanasi.jpg";
+import imgGoldenTemple from "@/assets/img-golden-temple.jpg";
+import imgTiger from "@/assets/img-tiger.jpg";
+import imgMountains from "@/assets/img-mountains.jpg";
+import imgHampi from "@/assets/img-hampi.jpg";
+import imgMysore from "@/assets/img-mysore.jpg";
+import imgKhajuraho from "@/assets/img-khajuraho.jpg";
+import imgDarjeeling from "@/assets/img-darjeeling.jpg";
+import imgMeghalaya from "@/assets/img-meghalaya.jpg";
+import imgRishikesh from "@/assets/img-rishikesh.jpg";
+import imgRhino from "@/assets/img-rhino.jpg";
+import imgRann from "@/assets/img-rann.jpg";
+import imgKumbh from "@/assets/img-kumbh.jpg";
+import imgLakshadweep from "@/assets/img-lakshadweep.jpg";
+import imgSikkim from "@/assets/img-sikkim.jpg";
+import imgDiwali from "@/assets/img-diwali.jpg";
+import imgHoli from "@/assets/img-holi.jpg";
+import imgNavratri from "@/assets/img-navratri.jpg";
+import imgDurga from "@/assets/img-durga.jpg";
+import imgOnam from "@/assets/img-onam.jpg";
+import imgMadhubani from "@/assets/img-madhubani.jpg";
+import imgPashmina from "@/assets/img-pashmina.jpg";
+import imgBanarasi from "@/assets/img-banarasi.jpg";
+import imgPottery from "@/assets/img-pottery.jpg";
+import imgKutch from "@/assets/img-kutch.jpg";
 
-// Verified working IDs
-const IMG = {
-  taj: "photo-1564507592333-c60657eea523",
-  taj2: "photo-1524492412937-b28074a5d7da",
-  india: "photo-1587474260584-136574528ed5",
-  kerala: "photo-1602216056096-3b40cc0c9944",
-  kerala2: "photo-1514222709107-a180c68d72b4",
-  garba: "photo-1601132359864-c974e79890ac",
-  ladakh: "photo-1477587458883-47145ed94245",
-  jaipur: "photo-1518002171953-a080ee817e1f",
-  hawamahal: "photo-1599661046289-e31897846e41",
-  varanasi: "photo-1561361513-2d000a50f0dc",
-  temple: "photo-1512343879784-a960bf40e7f2",
-  goa: "photo-1532375810709-75b1da00537c",
-  mountains: "photo-1469474968028-56623f02e42e",
-  landscape: "photo-1506905925346-21bda4d32df4",
-  rajasthan: "photo-1548013146-72479768bada",
-  hampi: "photo-1582510003544-4d00b7f74220",
-  kashmir: "photo-1566837945700-30057527ade0",
-  rhino: "photo-1564349683136-77e08dba1ef7",
-  andaman: "photo-1583212292454-1fe6229603b7",
-  festival: "photo-1623059508779-2542c6e83753",
-  kutch: "photo-1609766857041-ed402ea8069a",
-  sikkim: "photo-1626621341517-bbf3d9990a23",
-  darjeeling: "photo-1544634076-a90160ddf44c",
-  lakshadweep: "photo-1544551763-46a013bb70d5",
-  madhubani: "photo-1582555172866-f73bb12a2ab3",
-};
-
-// Map keywords → relevant verified image (best available for the topic)
+// Map keywords (in priority order — most specific first) to relevant images
 const KEYWORD_MAP: Array<{ match: RegExp; img: string }> = [
-  // Festivals
-  { match: /diwali/i, img: IMG.festival }, // colorful celebration
-  { match: /holi/i, img: IMG.garba }, // colorful crowd dance
-  { match: /navratri|garba/i, img: IMG.garba },
-  { match: /durga\s*puja/i, img: IMG.varanasi }, // bengal/devotional
-  { match: /onam/i, img: IMG.kerala },
-  { match: /kumbh/i, img: IMG.varanasi },
-  { match: /rann\s*utsav|kutch/i, img: IMG.kutch },
-  { match: /pushkar/i, img: IMG.rajasthan },
+  // Festivals — specific
+  { match: /diwali/i, img: imgDiwali },
+  { match: /holi/i, img: imgHoli },
+  { match: /navratri|garba/i, img: imgNavratri },
+  { match: /durga\s*puja/i, img: imgDurga },
+  { match: /onam/i, img: imgOnam },
+  { match: /kumbh/i, img: imgKumbh },
+  { match: /rann\s*utsav/i, img: imgRann },
+  { match: /pushkar/i, img: imgJaipur },
+
+  // Heritage / cities (specific)
+  { match: /taj\s*mahal|agra/i, img: imgTaj },
+  { match: /jaipur|hawa\s*mahal|pink\s*city/i, img: imgJaipur },
+  { match: /udaipur|jodhpur|jaisalmer|rajasthan/i, img: imgJaipur },
+  { match: /khajuraho/i, img: imgKhajuraho },
+  { match: /mysore/i, img: imgMysore },
+  { match: /hampi/i, img: imgHampi },
 
   // Mountains
-  { match: /ladakh/i, img: IMG.ladakh },
-  { match: /kashmir/i, img: IMG.kashmir },
-  { match: /sikkim/i, img: IMG.sikkim },
-  { match: /darjeeling/i, img: IMG.darjeeling },
-  { match: /meghalaya|shillong/i, img: IMG.sikkim },
-  { match: /shimla|manali|himachal/i, img: IMG.mountains },
-
-  // Heritage
-  { match: /taj\s*mahal/i, img: IMG.taj },
-  { match: /jaipur|hawa\s*mahal/i, img: IMG.hawamahal },
-  { match: /udaipur/i, img: IMG.rajasthan },
-  { match: /khajuraho/i, img: IMG.temple },
-  { match: /mysore/i, img: IMG.hawamahal },
-  { match: /hampi/i, img: IMG.hampi },
-  { match: /rajasthan/i, img: IMG.rajasthan },
+  { match: /ladakh|leh/i, img: imgLadakh },
+  { match: /kashmir|srinagar|dal\s*lake/i, img: imgKashmir },
+  { match: /sikkim|gangtok|kanchenjunga/i, img: imgSikkim },
+  { match: /darjeeling|tea/i, img: imgDarjeeling },
+  { match: /meghalaya|shillong|cherrapunji/i, img: imgMeghalaya },
+  { match: /shimla|manali|himachal|mussoorie|nainital/i, img: imgMountains },
 
   // Beaches
-  { match: /goa/i, img: IMG.goa },
-  { match: /andaman/i, img: IMG.andaman },
-  { match: /lakshadweep/i, img: IMG.lakshadweep },
-  { match: /kerala|backwater/i, img: IMG.kerala2 },
+  { match: /goa/i, img: imgGoa },
+  { match: /andaman|nicobar/i, img: imgAndaman },
+  { match: /lakshadweep/i, img: imgLakshadweep },
+  { match: /kerala|alleppey|backwater|kovalam/i, img: imgKerala },
 
   // Spiritual
-  { match: /varanasi|ganges|ghat/i, img: IMG.varanasi },
-  { match: /rishikesh/i, img: IMG.varanasi },
-  { match: /golden\s*temple|amritsar/i, img: IMG.temple },
-  { match: /tirupati|tirumala/i, img: IMG.temple },
+  { match: /varanasi|kashi|ganges|ghat/i, img: imgVaranasi },
+  { match: /rishikesh|haridwar/i, img: imgRishikesh },
+  { match: /golden\s*temple|amritsar/i, img: imgGoldenTemple },
+  { match: /tirupati|tirumala/i, img: imgGoldenTemple },
 
   // Wildlife
-  { match: /corbett|ranthambore|tiger/i, img: IMG.rhino },
-  { match: /kaziranga|rhino/i, img: IMG.rhino },
-  { match: /gir|lion/i, img: IMG.rhino },
+  { match: /corbett|ranthambore|tiger|bandhavgarh/i, img: imgTiger },
+  { match: /kaziranga|rhino/i, img: imgRhino },
+  { match: /gir|lion/i, img: imgTiger },
 
-  // Crafts
-  { match: /madhubani/i, img: IMG.madhubani },
-  { match: /pashmina/i, img: IMG.kashmir },
-  { match: /blue\s*pottery|jaipur/i, img: IMG.jaipur },
-  { match: /channapatna/i, img: IMG.madhubani },
-  { match: /phulkari/i, img: IMG.madhubani },
-  { match: /warli/i, img: IMG.madhubani },
-  { match: /chikankari|lucknow/i, img: IMG.madhubani },
-  { match: /banarasi|silk|saree|weav/i, img: IMG.madhubani },
-  { match: /craft|handicraft/i, img: IMG.madhubani },
+  // Crafts — specific
+  { match: /madhubani/i, img: imgMadhubani },
+  { match: /pashmina/i, img: imgPashmina },
+  { match: /blue\s*pottery/i, img: imgPottery },
+  { match: /banarasi|silk|saree/i, img: imgBanarasi },
+  { match: /kutch|bandhani|mirror\s*work/i, img: imgKutch },
+  { match: /channapatna|wooden\s*toy/i, img: imgPottery },
+  { match: /phulkari/i, img: imgKutch },
+  { match: /warli/i, img: imgMadhubani },
+  { match: /chikankari|lucknow/i, img: imgPashmina },
+  { match: /craft|handicraft|weav|embroider/i, img: imgMadhubani },
 
-  // Category fallbacks
-  { match: /festival/i, img: IMG.festival },
-  { match: /mountain/i, img: IMG.mountains },
-  { match: /heritage/i, img: IMG.taj2 },
-  { match: /beach/i, img: IMG.goa },
-  { match: /spiritual/i, img: IMG.temple },
-  { match: /wildlife/i, img: IMG.rhino },
+  // Category-level fallbacks
+  { match: /festival/i, img: imgDiwali },
+  { match: /mountain/i, img: imgMountains },
+  { match: /heritage/i, img: imgTaj },
+  { match: /beach/i, img: imgGoa },
+  { match: /spiritual/i, img: imgVaranasi },
+  { match: /wildlife/i, img: imgTiger },
 ];
 
-const DEFAULT_IMG = IMG.india;
+const DEFAULT_IMG = imgTaj;
 
 const pickImage = (alt: string, src: string): string => {
   const text = `${alt} ${src}`;
   for (const { match, img } of KEYWORD_MAP) {
-    if (match.test(text)) return buildUrl(img);
+    if (match.test(text)) return img;
   }
-  return buildUrl(DEFAULT_IMG);
+  return DEFAULT_IMG;
 };
 
 interface SafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -122,6 +123,7 @@ const SafeImage = ({ fallback, onError, className, alt, src, ...props }: SafeIma
   );
 
   const srcStr = typeof src === "string" ? src : "";
+  // Always use our curated local images for destination cards (DB paths are unreliable)
   const isLikelyMissing =
     srcStr.startsWith("/dest-") || srcStr === "" || srcStr === "/placeholder.svg";
   const finalSrc = failed || isLikelyMissing ? computedFallback : srcStr;
