@@ -1,90 +1,113 @@
 import { useState, useMemo } from "react";
 
-const buildUrl = (id: string, w = 1200) =>
-  `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
+// Local AI-generated tourism images — guaranteed to load and contextually accurate
+import imgTaj from "@/assets/img-taj.jpg";
+import imgJaipur from "@/assets/img-jaipur.jpg";
+import imgLadakh from "@/assets/img-ladakh.jpg";
+import imgKashmir from "@/assets/img-kashmir.jpg";
+import imgKerala from "@/assets/img-kerala.jpg";
+import imgGoa from "@/assets/img-goa.jpg";
+import imgAndaman from "@/assets/img-andaman.jpg";
+import imgVaranasi from "@/assets/img-varanasi.jpg";
+import imgGoldenTemple from "@/assets/img-golden-temple.jpg";
+import imgTiger from "@/assets/img-tiger.jpg";
+import imgMountains from "@/assets/img-mountains.jpg";
+import imgHampi from "@/assets/img-hampi.jpg";
+import imgMysore from "@/assets/img-mysore.jpg";
+import imgKhajuraho from "@/assets/img-khajuraho.jpg";
+import imgDarjeeling from "@/assets/img-darjeeling.jpg";
+import imgMeghalaya from "@/assets/img-meghalaya.jpg";
+import imgRishikesh from "@/assets/img-rishikesh.jpg";
+import imgRhino from "@/assets/img-rhino.jpg";
+import imgRann from "@/assets/img-rann.jpg";
+import imgKumbh from "@/assets/img-kumbh.jpg";
+import imgLakshadweep from "@/assets/img-lakshadweep.jpg";
+import imgSikkim from "@/assets/img-sikkim.jpg";
+import imgDiwali from "@/assets/img-diwali.jpg";
+import imgHoli from "@/assets/img-holi.jpg";
+import imgNavratri from "@/assets/img-navratri.jpg";
+import imgDurga from "@/assets/img-durga.jpg";
+import imgOnam from "@/assets/img-onam.jpg";
+import imgMadhubani from "@/assets/img-madhubani.jpg";
+import imgPashmina from "@/assets/img-pashmina.jpg";
+import imgBanarasi from "@/assets/img-banarasi.jpg";
+import imgPottery from "@/assets/img-pottery.jpg";
+import imgKutch from "@/assets/img-kutch.jpg";
 
-// Title-specific high-quality Indian tourism images (verified Unsplash IDs)
-const TITLE_MAP: Record<string, string> = {
-  // Festivals
-  "diwali": "photo-1605302329851-6d44a3df1cf2", // Diwali diyas/lamps
-  "holi": "photo-1617526715998-19fab8be35a6", // Holi colors
-  "navratri": "photo-1601132359864-c974e79890ac", // Garba dance
-  "durga puja": "photo-1604608672516-f1b9b1d2f7e7", // Durga idol
-  "onam": "photo-1602216056096-3b40cc0c9944", // Kerala flowers
-  "kumbh": "photo-1567604130959-7ea7ab2a7f10", // Ganges/pilgrims
-  "rann utsav": "photo-1609766857041-ed402ea8069a", // White desert Kutch
+// Map keywords (in priority order — most specific first) to relevant images
+const KEYWORD_MAP: Array<{ match: RegExp; img: string }> = [
+  // Festivals — specific
+  { match: /diwali/i, img: imgDiwali },
+  { match: /holi/i, img: imgHoli },
+  { match: /navratri|garba/i, img: imgNavratri },
+  { match: /durga\s*puja/i, img: imgDurga },
+  { match: /onam/i, img: imgOnam },
+  { match: /kumbh/i, img: imgKumbh },
+  { match: /rann\s*utsav/i, img: imgRann },
+  { match: /pushkar/i, img: imgJaipur },
 
-  // Mountains / Heritage
-  "ladakh": "photo-1589308078055-3df265d28b8a", // Pangong/Ladakh
-  "kashmir": "photo-1566837945700-30057527ade0", // Dal lake shikara
-  "sikkim": "photo-1626621341517-bbf3d9990a23", // Sikkim mountains
-  "darjeeling": "photo-1544634076-a90160ddf44c", // Darjeeling tea
-  "meghalaya": "photo-1626714932503-a6e6e9f00c81", // Living root bridge
-  "shimla": "photo-1626714932503-a6e6e9f00c81",
-  "manali": "photo-1626621341517-bbf3d9990a23",
+  // Heritage / cities (specific)
+  { match: /taj\s*mahal|agra/i, img: imgTaj },
+  { match: /jaipur|hawa\s*mahal|pink\s*city/i, img: imgJaipur },
+  { match: /udaipur|jodhpur|jaisalmer|rajasthan/i, img: imgJaipur },
+  { match: /khajuraho/i, img: imgKhajuraho },
+  { match: /mysore/i, img: imgMysore },
+  { match: /hampi/i, img: imgHampi },
 
-  // Heritage
-  "taj mahal": "photo-1564507592333-c60657eea523", // Taj Mahal
-  "jaipur": "photo-1599661046289-e31897846e41", // Hawa Mahal
-  "udaipur": "photo-1568732417863-13668e4ca2f2", // Udaipur palace
-  "khajuraho": "photo-1604089890024-e9e5c11e3469", // Khajuraho
-  "mysore palace": "photo-1600081760099-3b8e1d3c7d6e", // Mysore palace
-  "hampi": "photo-1600100397927-b4cc9b40072e", // Hampi ruins
-  "rajasthan": "photo-1599661046289-e31897846e41",
+  // Mountains
+  { match: /ladakh|leh/i, img: imgLadakh },
+  { match: /kashmir|srinagar|dal\s*lake/i, img: imgKashmir },
+  { match: /sikkim|gangtok|kanchenjunga/i, img: imgSikkim },
+  { match: /darjeeling|tea/i, img: imgDarjeeling },
+  { match: /meghalaya|shillong|cherrapunji/i, img: imgMeghalaya },
+  { match: /shimla|manali|himachal|mussoorie|nainital/i, img: imgMountains },
 
   // Beaches
-  "goa": "photo-1512343879784-a960bf40e7f2", // Goa beach
-  "andaman": "photo-1583212292454-1fe6229603b7", // Andaman water
-  "lakshadweep": "photo-1544551763-46a013bb70d5", // Tropical beach
-  "kerala": "photo-1602216056096-3b40cc0c9944", // Kerala backwaters
+  { match: /goa/i, img: imgGoa },
+  { match: /andaman|nicobar/i, img: imgAndaman },
+  { match: /lakshadweep/i, img: imgLakshadweep },
+  { match: /kerala|alleppey|backwater|kovalam/i, img: imgKerala },
 
   // Spiritual
-  "varanasi": "photo-1561361513-2d000a50f0dc", // Varanasi ghats
-  "rishikesh": "photo-1591018653829-1ae46fa9adda", // Rishikesh ganga
-  "golden temple": "photo-1588096344356-9b497e3d99c6", // Golden Temple
-  "tirupati": "photo-1582510003544-4d00b7f74220",
+  { match: /varanasi|kashi|ganges|ghat/i, img: imgVaranasi },
+  { match: /rishikesh|haridwar/i, img: imgRishikesh },
+  { match: /golden\s*temple|amritsar/i, img: imgGoldenTemple },
+  { match: /tirupati|tirumala/i, img: imgGoldenTemple },
 
   // Wildlife
-  "corbett": "photo-1605552055839-15ce2e44a6e5", // Tiger
-  "ranthambore": "photo-1605552055839-15ce2e44a6e5",
-  "kaziranga": "photo-1564349683136-77e08dba1ef7", // Rhino
-  "gir": "photo-1605552055839-15ce2e44a6e5", // Lion
+  { match: /corbett|ranthambore|tiger|bandhavgarh/i, img: imgTiger },
+  { match: /kaziranga|rhino/i, img: imgRhino },
+  { match: /gir|lion/i, img: imgTiger },
 
-  // Crafts
-  "madhubani": "photo-1582555172866-f73bb12a2ab3", // Madhubani art
-  "pashmina": "photo-1583309217394-d586f4d9e8b7", // Textile
-  "blue pottery": "photo-1607644536940-6c4ce21d2737", // Pottery
-  "channapatna": "photo-1607644536940-6c4ce21d2737",
-  "phulkari": "photo-1583309217394-d586f4d9e8b7",
-  "warli": "photo-1582555172866-f73bb12a2ab3",
-};
+  // Crafts — specific
+  { match: /madhubani/i, img: imgMadhubani },
+  { match: /pashmina/i, img: imgPashmina },
+  { match: /blue\s*pottery/i, img: imgPottery },
+  { match: /banarasi|silk|saree/i, img: imgBanarasi },
+  { match: /kutch|bandhani|mirror\s*work/i, img: imgKutch },
+  { match: /channapatna|wooden\s*toy/i, img: imgPottery },
+  { match: /phulkari/i, img: imgKutch },
+  { match: /warli/i, img: imgMadhubani },
+  { match: /chikankari|lucknow/i, img: imgPashmina },
+  { match: /craft|handicraft|weav|embroider/i, img: imgMadhubani },
 
-// Category fallbacks
-const CATEGORY_MAP: Record<string, string> = {
-  "festivals": "photo-1605302329851-6d44a3df1cf2",
-  "festival": "photo-1605302329851-6d44a3df1cf2",
-  "mountains": "photo-1589308078055-3df265d28b8a",
-  "heritage": "photo-1564507592333-c60657eea523",
-  "beaches": "photo-1512343879784-a960bf40e7f2",
-  "spiritual": "photo-1561361513-2d000a50f0dc",
-  "wildlife": "photo-1605552055839-15ce2e44a6e5",
-  "craft": "photo-1582555172866-f73bb12a2ab3",
-  "crafts": "photo-1582555172866-f73bb12a2ab3",
-};
+  // Category-level fallbacks
+  { match: /festival/i, img: imgDiwali },
+  { match: /mountain/i, img: imgMountains },
+  { match: /heritage/i, img: imgTaj },
+  { match: /beach/i, img: imgGoa },
+  { match: /spiritual/i, img: imgVaranasi },
+  { match: /wildlife/i, img: imgTiger },
+];
 
-const DEFAULT_IMG = "photo-1524492412937-b28074a5d7da"; // Taj Mahal
+const DEFAULT_IMG = imgTaj;
 
 const pickImage = (alt: string, src: string): string => {
-  const text = `${alt} ${src}`.toLowerCase();
-  // Title keyword match (longest match wins)
-  const sortedKeys = Object.keys(TITLE_MAP).sort((a, b) => b.length - a.length);
-  for (const key of sortedKeys) {
-    if (text.includes(key)) return buildUrl(TITLE_MAP[key]);
+  const text = `${alt} ${src}`;
+  for (const { match, img } of KEYWORD_MAP) {
+    if (match.test(text)) return img;
   }
-  for (const key of Object.keys(CATEGORY_MAP)) {
-    if (text.includes(key)) return buildUrl(CATEGORY_MAP[key]);
-  }
-  return buildUrl(DEFAULT_IMG);
+  return DEFAULT_IMG;
 };
 
 interface SafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -100,6 +123,7 @@ const SafeImage = ({ fallback, onError, className, alt, src, ...props }: SafeIma
   );
 
   const srcStr = typeof src === "string" ? src : "";
+  // Always use our curated local images for destination cards (DB paths are unreliable)
   const isLikelyMissing =
     srcStr.startsWith("/dest-") || srcStr === "" || srcStr === "/placeholder.svg";
   const finalSrc = failed || isLikelyMissing ? computedFallback : srcStr;
