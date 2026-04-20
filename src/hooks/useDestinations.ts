@@ -17,6 +17,7 @@ export interface DestinationRow {
 interface UseDestinationsOptions {
   search?: string;
   category?: string;
+  excludeCategories?: string[];
   sortBy?: "rating" | "price-low" | "price-high";
   priceMin?: number;
   priceMax?: number;
@@ -33,7 +34,7 @@ interface UseDestinationsResult {
 }
 
 export function useDestinations(options: UseDestinationsOptions): UseDestinationsResult {
-  const { search = "", category = "All", sortBy = "rating", priceMin, priceMax, page = 1, pageSize = 9 } = options;
+  const { search = "", category = "All", excludeCategories = [], sortBy = "rating", priceMin, priceMax, page = 1, pageSize = 9 } = options;
   const [destinations, setDestinations] = useState<DestinationRow[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,8 @@ export function useDestinations(options: UseDestinationsOptions): UseDestination
 
     if (category && category !== "All") {
       query = query.eq("category", category);
+    } else if (excludeCategories.length > 0) {
+      query = query.not("category", "in", `(${excludeCategories.map((c) => `"${c}"`).join(",")})`);
     }
 
     if (search) {
@@ -85,7 +88,7 @@ export function useDestinations(options: UseDestinationsOptions): UseDestination
     setDestinations((data as DestinationRow[]) || []);
     setTotalCount(count || 0);
     setLoading(false);
-  }, [search, category, sortBy, priceMin, priceMax, page, pageSize]);
+  }, [search, category, excludeCategories.join(","), sortBy, priceMin, priceMax, page, pageSize]);
 
   useEffect(() => {
     fetchDestinations();

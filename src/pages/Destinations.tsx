@@ -12,18 +12,25 @@ const Destinations = () => {
   const [searchParams] = useSearchParams();
   const urlCategory = searchParams.get("category") || "All";
   const urlSearch = searchParams.get("search") || "";
+  const urlExclude = searchParams.get("exclude") || "";
 
   const [search, setSearch] = useState(urlSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
   const [selectedCategory, setSelectedCategory] = useState(urlCategory);
+  const [excludeCategories, setExcludeCategories] = useState<string[]>(
+    urlExclude ? urlExclude.split(",").map((c) => c.trim()).filter(Boolean) : []
+  );
 
-  // Sync state when URL search params change (e.g., clicking navbar Festivals/Crafts while on this page)
+  // Sync state when URL search params change (e.g., clicking navbar links while on this page)
   useEffect(() => {
     setSelectedCategory(urlCategory);
     setSearch(urlSearch);
     setDebouncedSearch(urlSearch);
+    setExcludeCategories(
+      urlExclude ? urlExclude.split(",").map((c) => c.trim()).filter(Boolean) : []
+    );
     setPage(1);
-  }, [urlCategory, urlSearch]);
+  }, [urlCategory, urlSearch, urlExclude]);
   const [sortBy, setSortBy] = useState<"rating" | "price-low" | "price-high">("rating");
   const [priceMin, setPriceMin] = useState<number | undefined>();
   const [priceMax, setPriceMax] = useState<number | undefined>();
@@ -34,6 +41,7 @@ const Destinations = () => {
   const { destinations, totalCount, totalPages, currentPage, loading } = useDestinations({
     search: debouncedSearch,
     category: selectedCategory,
+    excludeCategories,
     sortBy,
     priceMin,
     priceMax,
