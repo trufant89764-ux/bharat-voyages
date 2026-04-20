@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube, AlertTriangle, Siren } from "lucide-react";
 import { useState } from "react";
 
 const Footer = () => {
@@ -25,7 +25,44 @@ const Footer = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/85 to-black/75" />
       </div>
 
-      <div className="relative z-10 container-custom py-16">
+      <div className="relative z-10 container-custom pt-12 pb-16">
+        {/* Notice + Emergency Helpline strip */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+          <div className="rounded-2xl border border-amber-400/40 bg-amber-500/10 backdrop-blur-sm p-5">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300">
+                <AlertTriangle size={18} />
+              </div>
+              <div>
+                <h4 className="font-display text-base font-semibold text-white">Travel Notice</h4>
+                <p className="text-white/70 text-xs leading-relaxed mt-1">
+                  Carry valid ID for inner-line permits in Ladakh, Sikkim and Arunachal Pradesh.
+                  Monsoon (Jun–Sep) may disrupt mountain travel. Always check local advisories before booking.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-red-400/40 bg-red-500/10 backdrop-blur-sm p-5">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-full bg-red-500/20 border border-red-400/40 flex items-center justify-center text-red-300">
+                <Siren size={18} />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-display text-base font-semibold text-white">Emergency Helplines</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 mt-2 text-xs">
+                  <a href="tel:112" className="text-white/80 hover:text-white"><span className="font-bold text-red-300">112</span> All-in-one</a>
+                  <a href="tel:100" className="text-white/80 hover:text-white"><span className="font-bold text-red-300">100</span> Police</a>
+                  <a href="tel:108" className="text-white/80 hover:text-white"><span className="font-bold text-red-300">108</span> Ambulance</a>
+                  <a href="tel:101" className="text-white/80 hover:text-white"><span className="font-bold text-red-300">101</span> Fire</a>
+                  <a href="tel:1363" className="text-white/80 hover:text-white"><span className="font-bold text-red-300">1363</span> Tourist</a>
+                  <a href="tel:1091" className="text-white/80 hover:text-white"><span className="font-bold text-red-300">1091</span> Women</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Link to="/" className="flex items-center gap-2 mb-4">
