@@ -7,7 +7,7 @@ import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/destinations", label: "Destinations" },
+  { to: "/destinations?exclude=Festivals,Craft", label: "Destinations" },
   { to: "/destinations?category=Festivals", label: "Festivals" },
   { to: "/destinations?category=Craft", label: "Crafts" },
   { to: "/booking", label: "Bookings" },
@@ -39,11 +39,19 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
             const [linkPath, linkQuery] = link.to.split("?");
-            const linkCategory = new URLSearchParams(linkQuery || "").get("category");
-            const currentCategory = new URLSearchParams(location.search).get("category");
+            const linkParams = new URLSearchParams(linkQuery || "");
+            const linkCategory = linkParams.get("category");
+            const linkExclude = linkParams.get("exclude");
+            const currentParams = new URLSearchParams(location.search);
+            const currentCategory = currentParams.get("category");
+            const currentExclude = currentParams.get("exclude");
             const isActive =
               location.pathname === linkPath &&
-              (linkCategory ? currentCategory === linkCategory : !currentCategory);
+              (linkCategory
+                ? currentCategory === linkCategory
+                : linkExclude
+                ? currentExclude === linkExclude && !currentCategory
+                : !currentCategory && !currentExclude);
             return (
               <Link
                 key={link.to}
