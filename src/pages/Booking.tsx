@@ -7,15 +7,28 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+const MODE_LABELS: Record<string, string> = {
+  flights: "Flight",
+  trains: "Train",
+  buses: "Bus",
+  cabs: "Cab",
+  stays: "Stay",
+};
+
 const Booking = () => {
   const [searchParams] = useSearchParams();
   const destId = searchParams.get("destination");
+  const mode = searchParams.get("mode");
+  const fromCity = searchParams.get("from");
+  const toCity = searchParams.get("to");
+  const queryDate = searchParams.get("date");
+  const queryTravellers = searchParams.get("travellers");
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const [selectedDest, setSelectedDest] = useState(destId || "");
-  const [date, setDate] = useState("");
-  const [people, setPeople] = useState(2);
+  const [date, setDate] = useState(queryDate || "");
+  const [people, setPeople] = useState(queryTravellers ? Math.max(1, parseInt(queryTravellers)) : 2);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
   const [bookingId, setBookingId] = useState("");
@@ -126,7 +139,18 @@ const Booking = () => {
           </div>
         )}
 
-        <h1 className="font-display text-3xl font-bold text-foreground mb-8">Book Your Trip</h1>
+        <h1 className="font-display text-3xl font-bold text-foreground mb-2">Book Your Trip</h1>
+        {mode && MODE_LABELS[mode] && (
+          <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-pink-500/10 border border-primary/20 text-sm text-foreground">
+            <strong className="text-primary">{MODE_LABELS[mode]} search:</strong>{" "}
+            {fromCity || "—"} → {toCity || "—"}
+            {queryDate ? ` on ${queryDate}` : ""}
+            {queryTravellers ? ` · ${queryTravellers} traveller${Number(queryTravellers) > 1 ? "s" : ""}` : ""}
+            <p className="text-muted-foreground text-xs mt-1">
+              Pick a destination below to continue with your {MODE_LABELS[mode].toLowerCase()} booking.
+            </p>
+          </div>
+        )}
 
         <div className="flex items-center gap-4 mb-10">
           {[1, 2, 3].map((s) => (

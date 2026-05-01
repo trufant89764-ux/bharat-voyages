@@ -246,7 +246,7 @@ const TravelBookingSection = () => {
 
                 <div className={`md:col-span-${showClass ? "6" : "9"} flex items-end`}>
                   <Link
-                    to="/destinations"
+                    to={`/booking?mode=${activeTab}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&date=${departDate}&travellers=${travellers}`}
                     className="w-full text-center px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-pink-500 text-white font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all"
                   >
                     Search {TABS.find((t) => t.id === activeTab)?.label}

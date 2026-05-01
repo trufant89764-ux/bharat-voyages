@@ -1,5 +1,4 @@
 import HeroSection from "@/components/HeroSection";
-import TravelBookingSection from "@/components/TravelBookingSection";
 import ExplorePlacesSection from "@/components/ExplorePlacesSection";
 import FeaturedDestinations from "@/components/FeaturedDestinations";
 import Categories from "@/components/Categories";
@@ -9,11 +8,11 @@ import CraftsSection from "@/components/CraftsSection";
 import GallerySection from "@/components/GallerySection";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
+import TravelBookingSection from "@/components/TravelBookingSection";
 
 const Index = () => (
   <>
     <HeroSection />
-    <TravelBookingSection />
     <ExplorePlacesSection />
     <FeaturedDestinations />
     <Categories />
@@ -23,6 +22,7 @@ const Index = () => (
     <GallerySection />
     <Testimonials />
     <CTASection />
+    <TravelBookingSection />
   </>
 );
 

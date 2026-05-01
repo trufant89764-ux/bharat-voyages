@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Star, MapPin, Clock, Users, ArrowLeft, Check, Send } from "lucide-react";
 import { destinations } from "@/data/destinations";
 import SafeImage from "@/components/SafeImage";
+import LocationDetails from "@/components/LocationDetails";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -240,6 +241,7 @@ const DestinationDetail = () => {
           </div>
         </div>
       </div>
+      <LocationDetails dest={dest} />
     </div>
   );
 };
