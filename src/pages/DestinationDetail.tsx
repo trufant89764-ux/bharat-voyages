@@ -1,7 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, MapPin, Clock, Users, ArrowLeft, Check, Send } from "lucide-react";
-import { destinations } from "@/data/destinations";
 import SafeImage from "@/components/SafeImage";
 import LocationDetails from "@/components/LocationDetails";
 import { useState, useEffect } from "react";
@@ -17,40 +16,64 @@ interface Review {
   profiles: { name: string } | null;
 }
 
+interface DestinationFull {
+  id: string;
+  title: string;
+  state: string;
+  category: string;
+  image: string;
+  price: number;
+  rating: number;
+  reviews_count: number;
+  short_desc: string;
+  description: string;
+  highlights: string[];
+  itinerary: string[];
+  lat: number | null;
+  lng: number | null;
+}
+
 const DestinationDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const dest = destinations.find((d) => d.id === id);
-  const [activeImg, setActiveImg] = useState(0);
   const { user } = useAuth();
+
+  const [dest, setDest] = useState<DestinationFull | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeImg, setActiveImg] = useState(0);
 
   // Reviews state
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newRating, setNewRating] = useState(5);
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [dbDestId, setDbDestId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!dest) return;
-    const fetchReviews = async () => {
-      const { data: dbDest } = await supabase
-        .from("destinations")
-        .select("id")
-        .eq("title", dest.title)
-        .maybeSingle();
-      if (dbDest) {
-        setDbDestId(dbDest.id);
-        const { data } = await supabase
+    if (!id) return;
+    const load = async () => {
+      setLoading(true);
+      // Detect UUID vs slug-like id
+      const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      let query = supabase.from("destinations").select("*");
+      const { data, error } = uuidRe.test(id)
+        ? await query.eq("id", id).maybeSingle()
+        : await query.ilike("title", id.replace(/-/g, " ")).maybeSingle();
+
+      if (error || !data) {
+        setDest(null);
+      } else {
+        setDest(data as DestinationFull);
+        const { data: rev } = await supabase
           .from("reviews")
           .select("*, profiles(name)")
-          .eq("destination_id", dbDest.id)
+          .eq("destination_id", data.id)
           .order("created_at", { ascending: false });
-        setReviews((data as any) || []);
+        setReviews((rev as any) || []);
       }
+      setLoading(false);
     };
-    fetchReviews();
-  }, [dest]);
+    load();
+  }, [id]);
 
   const handleSubmitReview = async () => {
     if (!user) {
@@ -58,10 +81,7 @@ const DestinationDetail = () => {
       navigate("/auth");
       return;
     }
-    if (!dbDestId) {
-      toast.error("Destination not found in database");
-      return;
-    }
+    if (!dest) return;
     if (!newComment.trim()) {
       toast.error("Please write a comment");
       return;
@@ -69,7 +89,7 @@ const DestinationDetail = () => {
     setSubmitting(true);
     const { error } = await supabase.from("reviews").insert({
       user_id: user.id,
-      destination_id: dbDestId,
+      destination_id: dest.id,
       rating: newRating,
       comment: newComment.trim(),
     });
@@ -79,16 +99,23 @@ const DestinationDetail = () => {
       toast.success("Review added!");
       setNewComment("");
       setNewRating(5);
-      // Refresh reviews
       const { data } = await supabase
         .from("reviews")
         .select("*, profiles(name)")
-        .eq("destination_id", dbDestId)
+        .eq("destination_id", dest.id)
         .order("created_at", { ascending: false });
       setReviews((data as any) || []);
     }
     setSubmitting(false);
   };
+
+  if (loading) {
+    return (
+      <div className="pt-20 min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Loading destination…</p>
+      </div>
+    );
+  }
 
   if (!dest) {
     return (
@@ -101,6 +128,10 @@ const DestinationDetail = () => {
     );
   }
 
+  const gallery = [dest.image];
+  const itinerary = dest.itinerary?.length ? dest.itinerary : ["Day 1: Arrival and exploration"];
+  const highlights = dest.highlights?.length ? dest.highlights : ["Scenic beauty", "Local culture"];
+
   return (
     <div className="pt-20 min-h-screen bg-background">
       <div className="container-custom py-8">
@@ -111,17 +142,8 @@ const DestinationDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl overflow-hidden">
-              <SafeImage src={dest.gallery[activeImg] || dest.image} alt={dest.title} width={800} height={600} className="w-full h-72 sm:h-96 object-cover" />
+              <SafeImage src={gallery[activeImg] || dest.image} alt={dest.title} width={800} height={600} className="w-full h-72 sm:h-96 object-cover" />
             </motion.div>
-            {dest.gallery.length > 1 && (
-              <div className="flex gap-3">
-                {dest.gallery.map((img, i) => (
-                  <button key={i} onClick={() => setActiveImg(i)} className={`w-20 h-14 rounded-lg overflow-hidden border-2 transition-colors ${activeImg === i ? "border-primary" : "border-transparent"}`}>
-                    <SafeImage src={img} alt="" className="w-full h-full object-cover" loading="lazy" width={80} height={56} />
-                  </button>
-                ))}
-              </div>
-            )}
 
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -129,18 +151,18 @@ const DestinationDetail = () => {
                 <div className="flex items-center gap-1 text-accent">
                   <Star size={14} fill="currentColor" />
                   <span className="text-sm font-medium">{dest.rating}</span>
-                  <span className="text-muted-foreground text-xs">({dest.reviews} reviews)</span>
+                  <span className="text-muted-foreground text-xs">({dest.reviews_count} reviews)</span>
                 </div>
               </div>
               <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-1">{dest.title}</h1>
               <p className="flex items-center gap-1 text-muted-foreground text-sm mb-6"><MapPin size={14} /> {dest.state}, India</p>
-              <p className="text-muted-foreground leading-relaxed">{dest.description}</p>
+              <p className="text-muted-foreground leading-relaxed">{dest.description || dest.short_desc}</p>
             </div>
 
             <div>
               <h3 className="font-display text-xl font-semibold text-foreground mb-4">Highlights</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {dest.highlights.map((h) => (
+                {highlights.map((h) => (
                   <div key={h} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Check size={16} className="text-secondary shrink-0" /> {h}
                   </div>
@@ -151,7 +173,7 @@ const DestinationDetail = () => {
             <div>
               <h3 className="font-display text-xl font-semibold text-foreground mb-4">Itinerary</h3>
               <div className="space-y-3">
-                {dest.itinerary.map((step, i) => (
+                {itinerary.map((step, i) => (
                   <div key={i} className="flex gap-4 items-start">
                     <div className="w-8 h-8 rounded-full gold-gradient flex items-center justify-center text-accent-foreground text-xs font-bold shrink-0">{i + 1}</div>
                     <p className="text-muted-foreground text-sm pt-1">{step}</p>
@@ -164,7 +186,6 @@ const DestinationDetail = () => {
             <div>
               <h3 className="font-display text-xl font-semibold text-foreground mb-4">Reviews</h3>
 
-              {/* Add Review Form */}
               <div className="p-4 rounded-xl bg-card border border-border mb-6 space-y-3">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">Rating:</span>
@@ -194,7 +215,6 @@ const DestinationDetail = () => {
                 </div>
               </div>
 
-              {/* Reviews List */}
               {reviews.length > 0 ? (
                 <div className="space-y-4">
                   {reviews.map((r) => (
@@ -229,7 +249,7 @@ const DestinationDetail = () => {
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm text-muted-foreground"><Clock size={16} className="text-primary" />{dest.itinerary.length} Days / {dest.itinerary.length - 1} Nights</div>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground"><Clock size={16} className="text-primary" />{itinerary.length} Days / {Math.max(1, itinerary.length - 1)} Nights</div>
                 <div className="flex items-center gap-3 text-sm text-muted-foreground"><Users size={16} className="text-primary" />Small group (max 12 people)</div>
                 <div className="flex items-center gap-3 text-sm text-muted-foreground"><MapPin size={16} className="text-primary" />{dest.state}, India</div>
               </div>
@@ -241,7 +261,19 @@ const DestinationDetail = () => {
           </div>
         </div>
       </div>
-      <LocationDetails dest={dest} />
+      {dest.lat != null && dest.lng != null && (
+        <LocationDetails
+          dest={{
+            id: dest.id,
+            title: dest.title,
+            state: dest.state,
+            category: dest.category,
+            lat: Number(dest.lat),
+            lng: Number(dest.lng),
+            itineraryDays: itinerary.length,
+          }}
+        />
+      )}
     </div>
   );
 };

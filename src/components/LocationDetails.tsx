@@ -2,11 +2,33 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, Cloud, Thermometer, Wind, Droplets, Navigation } from "lucide-react";
-import { destinations, type Destination } from "@/data/destinations";
 import SafeImage from "@/components/SafeImage";
+import { supabase } from "@/integrations/supabase/client";
+
+export interface LocationDest {
+  id: string;
+  title: string;
+  state: string;
+  category: string;
+  lat: number;
+  lng: number;
+  itineraryDays?: number;
+}
 
 interface Props {
-  dest: Destination;
+  dest: LocationDest;
+}
+
+interface NearbyRow {
+  id: string;
+  title: string;
+  state: string;
+  category: string;
+  image: string;
+  short_desc: string;
+  lat: number | null;
+  lng: number | null;
+  distance: number;
 }
 
 const haversineKm = (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => {
@@ -38,13 +60,29 @@ const WEATHER_DESC: Record<number, string> = {
 const LocationDetails = ({ dest }: Props) => {
   const [weather, setWeather] = useState<Weather | null>(null);
   const [loadingWeather, setLoadingWeather] = useState(true);
+  const [nearby, setNearby] = useState<NearbyRow[]>([]);
 
-  // Find nearby destinations (excluding self), within 500km, top 4
-  const nearby = destinations
-    .filter((d) => d.id !== dest.id)
-    .map((d) => ({ dest: d, distance: haversineKm(dest, d) }))
-    .sort((a, b) => a.distance - b.distance)
-    .slice(0, 4);
+  useEffect(() => {
+    let cancelled = false;
+    const fetchNearby = async () => {
+      const { data } = await supabase
+        .from("destinations")
+        .select("id, title, state, category, image, short_desc, lat, lng")
+        .neq("id", dest.id);
+      if (cancelled || !data) return;
+      const withDist = data
+        .filter((d) => d.lat != null && d.lng != null)
+        .map((d) => ({
+          ...d,
+          distance: haversineKm(dest, { lat: Number(d.lat), lng: Number(d.lng) }),
+        }))
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 4) as NearbyRow[];
+      setNearby(withDist);
+    };
+    fetchNearby();
+    return () => { cancelled = true; };
+  }, [dest.id, dest.lat, dest.lng]);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,9 +109,7 @@ const LocationDetails = ({ dest }: Props) => {
       }
     };
     fetchWeather();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [dest.lat, dest.lng]);
 
   const bbox = [dest.lng - 0.05, dest.lat - 0.05, dest.lng + 0.05, dest.lat + 0.05].join(",");
@@ -101,7 +137,6 @@ const LocationDetails = ({ dest }: Props) => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-          {/* Map */}
           <div className="lg:col-span-2 rounded-2xl overflow-hidden border border-border shadow-lg bg-card">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <h3 className="font-display text-lg font-semibold flex items-center gap-2">
@@ -124,7 +159,6 @@ const LocationDetails = ({ dest }: Props) => {
             />
           </div>
 
-          {/* Weather + Info */}
           <div className="space-y-4">
             <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <h3 className="font-display text-lg font-semibold mb-4 flex items-center gap-2">
@@ -166,19 +200,20 @@ const LocationDetails = ({ dest }: Props) => {
                 <li className="flex justify-between"><span className="text-muted-foreground">State</span><span className="font-medium">{dest.state}</span></li>
                 <li className="flex justify-between"><span className="text-muted-foreground">Category</span><span className="font-medium">{dest.category}</span></li>
                 <li className="flex justify-between"><span className="text-muted-foreground">Coordinates</span><span className="font-medium text-xs">{dest.lat.toFixed(2)}, {dest.lng.toFixed(2)}</span></li>
-                <li className="flex justify-between"><span className="text-muted-foreground">Best for</span><span className="font-medium">{dest.itinerary.length} days</span></li>
+                {dest.itineraryDays && (
+                  <li className="flex justify-between"><span className="text-muted-foreground">Best for</span><span className="font-medium">{dest.itineraryDays} days</span></li>
+                )}
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Nearby Attractions */}
         {nearby.length > 0 && (
           <div>
             <h3 className="font-display text-2xl font-bold text-foreground mb-2">Nearby Places to Visit</h3>
             <p className="text-muted-foreground text-sm mb-6">Discover more incredible destinations close to {dest.title}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {nearby.map(({ dest: d, distance }) => (
+              {nearby.map((d) => (
                 <Link
                   key={d.id}
                   to={`/destination/${d.id}`}
@@ -193,7 +228,7 @@ const LocationDetails = ({ dest }: Props) => {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-black/60 backdrop-blur text-white text-[10px] font-medium">
-                      {Math.round(distance)} km away
+                      {Math.round(d.distance)} km away
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
                       <p className="text-[10px] uppercase tracking-wider text-white/80">{d.state} · {d.category}</p>
@@ -201,7 +236,7 @@ const LocationDetails = ({ dest }: Props) => {
                     </div>
                   </div>
                   <div className="p-3">
-                    <p className="text-xs text-muted-foreground line-clamp-2">{d.shortDesc}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{d.short_desc}</p>
                   </div>
                 </Link>
               ))}
