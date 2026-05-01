@@ -7,15 +7,28 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+const MODE_LABELS: Record<string, string> = {
+  flights: "Flight",
+  trains: "Train",
+  buses: "Bus",
+  cabs: "Cab",
+  stays: "Stay",
+};
+
 const Booking = () => {
   const [searchParams] = useSearchParams();
   const destId = searchParams.get("destination");
+  const mode = searchParams.get("mode");
+  const fromCity = searchParams.get("from");
+  const toCity = searchParams.get("to");
+  const queryDate = searchParams.get("date");
+  const queryTravellers = searchParams.get("travellers");
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const [selectedDest, setSelectedDest] = useState(destId || "");
-  const [date, setDate] = useState("");
-  const [people, setPeople] = useState(2);
+  const [date, setDate] = useState(queryDate || "");
+  const [people, setPeople] = useState(queryTravellers ? Math.max(1, parseInt(queryTravellers)) : 2);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
   const [bookingId, setBookingId] = useState("");
