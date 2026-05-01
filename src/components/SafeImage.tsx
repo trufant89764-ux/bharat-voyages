@@ -60,7 +60,9 @@ const KEYWORD_MAP: Array<{ match: RegExp; img: string }> = [
   { match: /sikkim|gangtok|kanchenjunga/i, img: imgSikkim },
   { match: /darjeeling|tea/i, img: imgDarjeeling },
   { match: /meghalaya|shillong|cherrapunji/i, img: imgMeghalaya },
-  { match: /shimla|manali|himachal|mussoorie|nainital/i, img: imgMountains },
+  { match: /spiti|lahaul|kinnaur/i, img: imgMountains },
+  { match: /shimla|manali|himachal|mussoorie|nainital|valley\s*of\s*flowers|auli/i, img: imgMountains },
+  { match: /ajanta|ellora|elephanta|sanchi|konark|mahabalipuram|halebidu|belur/i, img: imgKhajuraho },
 
   // Beaches
   { match: /goa/i, img: imgGoa },
