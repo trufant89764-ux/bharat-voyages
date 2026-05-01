@@ -139,7 +139,18 @@ const Booking = () => {
           </div>
         )}
 
-        <h1 className="font-display text-3xl font-bold text-foreground mb-8">Book Your Trip</h1>
+        <h1 className="font-display text-3xl font-bold text-foreground mb-2">Book Your Trip</h1>
+        {mode && MODE_LABELS[mode] && (
+          <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-pink-500/10 border border-primary/20 text-sm text-foreground">
+            <strong className="text-primary">{MODE_LABELS[mode]} search:</strong>{" "}
+            {fromCity || "—"} → {toCity || "—"}
+            {queryDate ? ` on ${queryDate}` : ""}
+            {queryTravellers ? ` · ${queryTravellers} traveller${Number(queryTravellers) > 1 ? "s" : ""}` : ""}
+            <p className="text-muted-foreground text-xs mt-1">
+              Pick a destination below to continue with your {MODE_LABELS[mode].toLowerCase()} booking.
+            </p>
+          </div>
+        )}
 
         <div className="flex items-center gap-4 mb-10">
           {[1, 2, 3].map((s) => (
