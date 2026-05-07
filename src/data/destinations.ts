@@ -709,7 +709,7 @@ export const categories: { name: Category; icon: string; count: number }[] = [
   { name: "Wildlife", icon: "🐅", count: 4 },
   { name: "Spiritual", icon: "🕉️", count: 3 },
   { name: "Festivals", icon: "🎨", count: 8 },
-  { name: "Craft", icon: "🏺", count: 6 },
+  { name: "Craft", icon: "🏺", count: 11 },
 ];
 
 export const testimonials = [
