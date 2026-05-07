@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
-import { Calendar, MapPin } from "lucide-react";
+import { useState } from "react";
+import { Calendar, MapPin, X } from "lucide-react";
 
-// Major Indian public & festival holidays for 2026 (national + popular regional)
-const HOLIDAYS_2026 = [
+// list of holidays for 2026
+const HOLIDAYS = [
   { date: "2026-01-01", name: "New Year's Day", type: "Public", region: "Pan India" },
   { date: "2026-01-14", name: "Makar Sankranti / Pongal", type: "Festival", region: "Pan India" },
   { date: "2026-01-26", name: "Republic Day", type: "National", region: "Pan India" },
@@ -29,76 +29,90 @@ const HOLIDAYS_2026 = [
   { date: "2026-12-25", name: "Christmas", type: "Public", region: "Pan India" },
 ];
 
-const TYPE_COLORS: Record<string, string> = {
-  National: "bg-orange-500/15 text-orange-600 border-orange-500/30",
-  Public: "bg-blue-500/15 text-blue-600 border-blue-500/30",
-  Festival: "bg-pink-500/15 text-pink-600 border-pink-500/30",
+const typeColor = (t: string) => {
+  if (t === "National") return "bg-orange-500/15 text-orange-600 border-orange-500/30";
+  if (t === "Public") return "bg-blue-500/15 text-blue-600 border-blue-500/30";
+  return "bg-pink-500/15 text-pink-600 border-pink-500/30";
 };
 
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", weekday: "short" });
+
 const PublicHolidaysSection = () => {
-  const [filter, setFilter] = useState<string>("All");
-
-  const filtered = useMemo(
-    () => (filter === "All" ? HOLIDAYS_2026 : HOLIDAYS_2026.filter((h) => h.type === filter)),
-    [filter]
-  );
-
-  const fmt = (d: string) =>
-    new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", weekday: "short" });
+  const [open, setOpen] = useState(false);
 
   return (
     <section className="section-padding bg-muted/30">
       <div className="container-custom">
-        <div className="text-center mb-10">
-          <p className="font-body text-primary text-sm tracking-[0.2em] uppercase mb-2">
-            <Calendar size={14} className="inline mr-1" /> Plan Your Trip
-          </p>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
+        {/* small teaser card */}
+        <div className="max-w-2xl mx-auto rounded-2xl border border-border bg-card p-6 sm:p-8 text-center shadow-sm">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
+            <Calendar size={22} />
+          </div>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
             Public Holidays & Festivals 2026
           </h2>
-          <p className="text-muted-foreground mt-3 max-w-2xl mx-auto text-sm">
-            Time your visit around India's most colourful celebrations and long weekends.
+          <p className="text-muted-foreground mt-2 text-sm">
+            Plan your trip around India's biggest celebrations and long weekends.
           </p>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {["All", "National", "Public", "Festival"].map((t) => (
-            <button
-              key={t}
-              onClick={() => setFilter(t)}
-              className={`px-4 py-1.5 rounded-full text-sm border transition-colors ${
-                filter === t
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-background text-foreground border-border hover:border-primary/50"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((h) => (
-            <div
-              key={h.date + h.name}
-              className="rounded-xl border border-border bg-card p-4 hover:shadow-md hover:border-primary/30 transition-all"
-            >
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <div>
-                  <h3 className="font-semibold text-foreground">{h.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">{fmt(h.date)}</p>
-                </div>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full border ${TYPE_COLORS[h.type]}`}>
-                  {h.type}
-                </span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin size={12} /> {h.region}
-              </div>
-            </div>
-          ))}
+          <button
+            onClick={() => setOpen(true)}
+            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
+            View Holidays
+          </button>
         </div>
       </div>
+
+      {/* modal */}
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="bg-background rounded-2xl shadow-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h3 className="font-display text-xl font-bold text-foreground">
+                Holidays & Festivals 2026
+              </h3>
+              <button
+                onClick={() => setOpen(false)}
+                className="p-2 rounded-full hover:bg-muted transition-colors"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto p-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {HOLIDAYS.map((h) => (
+                  <div
+                    key={h.date + h.name}
+                    className="rounded-xl border border-border bg-card p-4 hover:shadow-md hover:border-primary/30 transition-all"
+                  >
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div>
+                        <h4 className="font-semibold text-foreground">{h.name}</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">{formatDate(h.date)}</p>
+                      </div>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${typeColor(h.type)}`}>
+                        {h.type}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <MapPin size={12} /> {h.region}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
