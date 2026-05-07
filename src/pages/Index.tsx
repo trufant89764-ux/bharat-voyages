@@ -5,6 +5,8 @@ import Categories from "@/components/Categories";
 import ExperiencesSection from "@/components/ExperiencesSection";
 import FestivalsSection from "@/components/FestivalsSection";
 import CraftsSection from "@/components/CraftsSection";
+import PublicHolidaysSection from "@/components/PublicHolidaysSection";
+import CurrencyConverter from "@/components/CurrencyConverter";
 import GallerySection from "@/components/GallerySection";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
@@ -19,6 +21,8 @@ const Index = () => (
     <ExperiencesSection />
     <FestivalsSection />
     <CraftsSection />
+    <PublicHolidaysSection />
+    <CurrencyConverter />
     <GallerySection />
     <Testimonials />
     <CTASection />
