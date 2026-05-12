@@ -1,62 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import { useDestinations } from "@/hooks/useDestinations";
 
-const AUTO_INTERVAL = 3000;
+// Auto-slide every 3 seconds
+const INTERVAL = 3000;
+const VISIBLE = 4; // cards visible at once
 
 const ExplorePlacesSection = () => {
   const { destinations, loading } = useDestinations({ pageSize: 16, sortBy: "rating" });
-  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [start, setStart] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [index, setIndex] = useState(0);
 
-  // Build a looped list (clone for seamless infinite feel)
-  const items = destinations.length > 0 ? [...destinations, ...destinations] : [];
+  const total = destinations.length;
 
+  // Auto slide
   useEffect(() => {
-    if (paused || items.length === 0) return;
-    const id = setInterval(() => {
-      setIndex((i) => i + 1);
-    }, AUTO_INTERVAL);
+    if (paused || total === 0) return;
+    const id = setInterval(() => setStart((s) => (s + 1) % total), INTERVAL);
     return () => clearInterval(id);
-  }, [paused, items.length]);
+  }, [paused, total]);
 
-  // Scroll on index change
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track || destinations.length === 0) return;
-    const card = track.querySelector<HTMLElement>("[data-card]");
-    if (!card) return;
-    const cardWidth = card.offsetWidth + 16; // gap
-    const maxIndex = destinations.length;
-    if (index >= maxIndex) {
-      // Reset without animation
-      track.style.scrollBehavior = "auto";
-      track.scrollLeft = 0;
-      setIndex(0);
-      requestAnimationFrame(() => {
-        if (track) track.style.scrollBehavior = "smooth";
-      });
-      return;
-    }
-    track.scrollTo({ left: index * cardWidth, behavior: "smooth" });
-  }, [index, destinations.length]);
+  const next = () => setStart((s) => (s + 1) % Math.max(total, 1));
+  const prev = () => setStart((s) => (s - 1 + total) % Math.max(total, 1));
 
-  const next = () => setIndex((i) => i + 1);
-  const prev = () => setIndex((i) => Math.max(0, i - 1));
+  // Pick the visible cards (loops around the array)
+  const visibleCards = total === 0 ? [] : Array.from({ length: VISIBLE }, (_, i) => destinations[(start + i) % total]);
 
   return (
     <section className="py-20 bg-background">
       <div className="container-custom">
         <div className="flex items-end justify-between mb-8 gap-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div>
             <span className="text-xs uppercase tracking-[0.3em] text-primary font-semibold">Incredible India</span>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mt-2">
               Explore Places
@@ -64,30 +40,18 @@ const ExplorePlacesSection = () => {
             <p className="text-muted-foreground text-sm sm:text-base mt-2 max-w-xl">
               Iconic experiences from snow-clad peaks to sun-kissed beaches
             </p>
-          </motion.div>
+          </div>
           <div className="hidden sm:flex items-center gap-2">
-            <button
-              onClick={prev}
-              aria-label="Previous"
-              className="w-11 h-11 rounded-full border border-border bg-card text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all flex items-center justify-center"
-            >
+            <button onClick={prev} aria-label="Previous" className="w-11 h-11 rounded-full border border-border bg-card hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center">
               <ChevronLeft size={18} />
             </button>
-            <button
-              onClick={next}
-              aria-label="Next"
-              className="w-11 h-11 rounded-full border border-border bg-card text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all flex items-center justify-center"
-            >
+            <button onClick={next} aria-label="Next" className="w-11 h-11 rounded-full border border-border bg-card hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center">
               <ChevronRight size={18} />
             </button>
           </div>
         </div>
 
-        <div
-          className="relative"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-        >
+        <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
           {loading ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -95,17 +59,12 @@ const ExplorePlacesSection = () => {
               ))}
             </div>
           ) : (
-            <div
-              ref={trackRef}
-              className="flex gap-4 overflow-x-hidden snap-x scroll-smooth"
-            >
-              {items.map((dest, i) => (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {visibleCards.map((dest, i) => (
                 <Link
                   key={`${dest.id}-${i}`}
                   to={`/destination/${dest.id}`}
-                  data-card
-                  className="group relative shrink-0 snap-start rounded-2xl overflow-hidden shadow-lg"
-                  style={{ width: "calc((100% - 3rem) / 4)", minWidth: "240px", height: "360px" }}
+                  className="group relative rounded-2xl overflow-hidden shadow-lg h-[360px]"
                 >
                   <SafeImage
                     src={dest.image}
@@ -113,11 +72,8 @@ const ExplorePlacesSection = () => {
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  {/* Gradient overlay (always) */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                  {/* Dark hover overlay */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500" />
-
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
                   <div className="absolute inset-0 p-5 flex flex-col justify-end text-white">
                     <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider font-semibold mb-2 text-white/90">
                       <MapPin size={12} className="text-primary" />
@@ -133,20 +89,11 @@ const ExplorePlacesSection = () => {
             </div>
           )}
 
-          {/* Mobile arrows */}
           <div className="flex sm:hidden items-center justify-center gap-2 mt-6">
-            <button
-              onClick={prev}
-              aria-label="Previous"
-              className="w-10 h-10 rounded-full border border-border bg-card text-foreground flex items-center justify-center"
-            >
+            <button onClick={prev} aria-label="Previous" className="w-10 h-10 rounded-full border border-border bg-card flex items-center justify-center">
               <ChevronLeft size={16} />
             </button>
-            <button
-              onClick={next}
-              aria-label="Next"
-              className="w-10 h-10 rounded-full border border-border bg-card text-foreground flex items-center justify-center"
-            >
+            <button onClick={next} aria-label="Next" className="w-10 h-10 rounded-full border border-border bg-card flex items-center justify-center">
               <ChevronRight size={16} />
             </button>
           </div>
