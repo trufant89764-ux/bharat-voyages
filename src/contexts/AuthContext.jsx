@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/backend";
 const AuthContext = createContext(void 0);
 const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);

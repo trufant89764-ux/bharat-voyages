@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Cloud, Wind, Droplets, Navigation } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/backend";
 function distanceKm(lat1, lng1, lat2, lng2) {
   const R = 6371;
   const toRad = (v) => v * Math.PI / 180;

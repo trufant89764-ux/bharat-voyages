@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { CreditCard, Check, ArrowLeft } from "lucide-react";
 import { destinations } from "@/data/destinations";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/backend";
 import { toast } from "sonner";
 const MODE_LABELS = {
   flights: "Flight",

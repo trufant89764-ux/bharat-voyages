@@ -5,7 +5,7 @@ import SafeImage from "@/components/SafeImage";
 import LocationDetails from "@/components/LocationDetails";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/backend";
 import { toast } from "sonner";
 const DestinationDetail = () => {
   const { id } = useParams();

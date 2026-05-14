@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/backend";
 import logger from "@/lib/logger";
 function useDestinations(options) {
   const { search = "", category = "All", excludeCategories = [], sortBy = "rating", priceMin, priceMax, page = 1, pageSize = 9 } = options;
