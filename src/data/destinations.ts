@@ -18,8 +18,6 @@ export interface Destination {
   lng: number;
 }
 
-const img = (id: string, w = 800) => `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
-
 export const destinations: Destination[] = [
   // === BEACHES ===
   {
