@@ -5,6 +5,7 @@ const realImages: Record<string, string> = {
   "Kerala Backwaters": "https://upload.wikimedia.org/wikipedia/commons/e/ee/House_Boat_DSW.jpg",
   "Gokarna Beaches": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Delight_india.jpg",
   "Pondicherry French Quarter": "https://upload.wikimedia.org/wikipedia/commons/1/17/Pondicherry-French_Quarter-WUS02277.jpg",
+  "Pondicherry Heritage": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Pondicherry-French_Quarter-WUS02279.jpg",
   "Andaman Islands": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Radha_Nagar_beach%2C_Havelock_Island%2C_Andamn%2C_India-_Sun_set_view.jpg/1280px-Radha_Nagar_beach%2C_Havelock_Island%2C_Andamn%2C_India-_Sun_set_view.jpg",
   "Kashmir Valley": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Dal_Lake_Hazratbal_Srinagar.jpg/1280px-Dal_Lake_Hazratbal_Srinagar.jpg",
   "Ladakh Adventure": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Leh_City_seen_from_Shanti_Stupa.JPG/1280px-Leh_City_seen_from_Shanti_Stupa.JPG",
@@ -52,6 +53,10 @@ function pickImage(title: string) {
   return realImages[title] || "/placeholder.svg";
 }
 
+function oldImageIsFake(src: string) {
+  return src === "/placeholder.svg" || src.startsWith("/dest-");
+}
+
 interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
   fallback?: string;
 }
@@ -61,8 +66,7 @@ const SafeImage = ({ fallback, alt, src, onError, ...props }: Props) => {
   const srcStr = typeof src === "string" ? src : "";
   const altStr = (alt as string) || "";
 
-  // Use a real photo if old fake /dest image is found
-  const useLocal = failed || !srcStr || srcStr === "/placeholder.svg" || srcStr.startsWith("/dest-");
+  const useLocal = failed || !srcStr || oldImageIsFake(srcStr);
   const finalSrc = useLocal ? (fallback || pickImage(altStr)) : srcStr;
 
   return (
