@@ -31,6 +31,11 @@ const Destinations = () => {
     );
     setPage(1);
   }, [urlCategory, urlSearch, urlExclude]);
+
+  // Smooth scroll to top whenever the page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
   const [sortBy, setSortBy] = useState<"rating" | "price-low" | "price-high">("rating");
   const [priceMin, setPriceMin] = useState<number | undefined>();
   const [priceMax, setPriceMax] = useState<number | undefined>();
