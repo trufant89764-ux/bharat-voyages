@@ -24,9 +24,7 @@ const Navbar = () => {
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        isHome ? "glass" : "bg-background/95 backdrop-blur-md border-b border-border"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border"
     >
       <div className="container-custom flex items-center justify-between h-16 sm:h-20">
         <Link to="/" className="flex items-center gap-2">
@@ -57,11 +55,7 @@ const Navbar = () => {
                 key={link.to}
                 to={link.to}
                 className={`font-body text-sm font-medium transition-colors hover:text-primary ${
-                  isActive
-                    ? "text-primary"
-                    : isHome
-                    ? "text-white/90"
-                    : "text-muted-foreground"
+                  isActive ? "text-primary" : "text-foreground"
                 }`}
               >
                 {link.label}
