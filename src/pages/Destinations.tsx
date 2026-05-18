@@ -37,6 +37,11 @@ const Destinations = () => {
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
 
+  // Smooth scroll to top whenever the page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
   const { categories } = useCategories();
   const { destinations, totalCount, totalPages, currentPage, loading } = useDestinations({
     search: debouncedSearch,
