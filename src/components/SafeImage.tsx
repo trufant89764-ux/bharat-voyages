@@ -47,6 +47,18 @@ const realImages: Record<string, string> = {
   "Onam in Kerala": "https://upload.wikimedia.org/wikipedia/commons/8/87/Onapookkalam.jpg",
   "Pushkar Camel Fair": "https://upload.wikimedia.org/wikipedia/commons/b/b7/%28A%29_Camel_Pushkar_fair.jpg",
   "Pushkar Mela": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Pushkar_Fair.jpg/1280px-Pushkar_Fair.jpg",
+  "Pongal Harvest Festival": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Pongal_celebrations.jpg",
+  "Rath Yatra Puri": "https://upload.wikimedia.org/wikipedia/commons/3/30/Rathyatra-puri-2007.jpg",
+  "Thrissur Pooram": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Thrissur_pooram_2013_DSC_0124.jpg",
+  "Kumbh Mela Prayagraj": "https://upload.wikimedia.org/wikipedia/commons/5/53/Kumbh_Mela_2013_Sangam.jpg",
+  "Hemis Festival Ladakh": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Hemis_Festival%2C_Ladakh.jpg",
+  "Losar Tibetan New Year": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Cham_dance_at_Rumtek_Monastery%2C_Sikkim.jpg",
+  "Pattachitra of Odisha": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Pattachitra_painting.jpg",
+  "Bidriware of Bidar": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Bidriware_Hookah_base.jpg",
+  "Dhokra Metal Craft": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Dhokra_artist_at_work.jpg",
+  "Jaipur Blue Pottery": "https://upload.wikimedia.org/wikipedia/commons/0/02/Blue_pottery_jaipur.jpg",
+  "Warli Painting Trail": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Warli_painting.jpg",
+  "Kalamkari of Andhra": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Kalamkari_painting.jpg",
 };
 
 function pickImage(title: string) {
