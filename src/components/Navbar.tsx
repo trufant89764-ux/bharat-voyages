@@ -107,9 +107,9 @@ const Navbar = () => {
             aria-label="Toggle menu"
           >
             {open ? (
-              <X className={isHome ? "text-white" : "text-foreground"} />
+              <X className="text-foreground" />
             ) : (
-              <Menu className={isHome ? "text-white" : "text-foreground"} />
+              <Menu className="text-foreground" />
             )}
           </button>
         </div>
