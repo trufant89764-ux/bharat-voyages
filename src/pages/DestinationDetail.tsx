@@ -261,19 +261,17 @@ const DestinationDetail = () => {
           </div>
         </div>
       </div>
-      {dest.lat != null && dest.lng != null && (
-        <LocationDetails
-          dest={{
-            id: dest.id,
-            title: dest.title,
-            state: dest.state,
-            category: dest.category,
-            lat: Number(dest.lat),
-            lng: Number(dest.lng),
-            itineraryDays: itinerary.length,
-          }}
-        />
-      )}
+      <LocationDetails
+        dest={{
+          id: dest.id,
+          title: dest.title,
+          state: dest.state,
+          category: dest.category,
+          lat: dest.lat != null ? Number(dest.lat) : null,
+          lng: dest.lng != null ? Number(dest.lng) : null,
+          itineraryDays: itinerary.length,
+        }}
+      />
     </div>
   );
 };
