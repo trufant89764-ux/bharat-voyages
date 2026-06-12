@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ImageOff } from "lucide-react";
+
 
 const realImages: Record<string, string> = {
   "Goa Beaches": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Palolem_Beach%2C_South_Goa.jpg/1280px-Palolem_Beach%2C_South_Goa.jpg",
@@ -46,7 +48,7 @@ const realImages: Record<string, string> = {
   "Navratri in Gujarat": "https://upload.wikimedia.org/wikipedia/commons/3/39/Garba_%28dance%29.jpg",
   "Onam in Kerala": "https://upload.wikimedia.org/wikipedia/commons/8/87/Onapookkalam.jpg",
   "Pushkar Camel Fair": "https://upload.wikimedia.org/wikipedia/commons/b/b7/%28A%29_Camel_Pushkar_fair.jpg",
-  "Pushkar Mela": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Pushkar_Fair.jpg/1280px-Pushkar_Fair.jpg",
+  "Pushkar Mela": "https://commons.wikimedia.org/wiki/Special:FilePath/Camels_of_Pushkar_Camel_Fair_(2015).jpg?width=1280",
   "Pongal Harvest Festival": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/A_girl_performing_a_Bharatanatyam_dance_at_a_Pongal_Festival_in_Namakkal%2C_Tamil_Nadu%2C_India.jpg/1280px-A_girl_performing_a_Bharatanatyam_dance_at_a_Pongal_Festival_in_Namakkal%2C_Tamil_Nadu%2C_India.jpg",
   "Rath Yatra Puri": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Jagannath_Rath_Yatra_Puri_Odisha.jpg",
   "Thrissur Pooram": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Aanas_at_Thrissur_Pooram.jpg/1280px-Aanas_at_Thrissur_Pooram.jpg",
@@ -65,19 +67,19 @@ const realImages: Record<string, string> = {
   "Valley of Flowers": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_01.jpg/1280px-Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_01.jpg",
   "Rishikesh Adventure": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Ganga_Arti_at_Rishikesh.jpg/1280px-Ganga_Arti_at_Rishikesh.jpg",
   "Dudhsagar Falls": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Dudhsagar_Waterfall_%283231771809%29.jpg/1280px-Dudhsagar_Waterfall_%283231771809%29.jpg",
-  "Varkala Cliff Beach": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Varkala_beach_view.jpg/1280px-Varkala_beach_view.jpg",
+  "Varkala Cliff Beach": "https://commons.wikimedia.org/wiki/Special:FilePath/Varkala_Beach_2.jpg?width=1280",
   "Marari Beach": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Mararikulam_Beach_2.jpg/1280px-Mararikulam_Beach_2.jpg",
   "Diu Island Beaches": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Nagoa_Beach_Diu.jpg/1280px-Nagoa_Beach_Diu.jpg",
-  "Mahabalipuram Shore Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Shore_Temple_Group_of_monuments_at_Mahabalipuram_April_2019.jpg/1280px-Shore_Temple_Group_of_monuments_at_Mahabalipuram_April_2019.jpg",
-  "Fatehpur Sikri": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Fatehpur_Sikri-_Buland_Darwaza_gate_seen_from_outside_05.jpg/1280px-Fatehpur_Sikri-_Buland_Darwaza_gate_seen_from_outside_05.jpg",
+  "Mahabalipuram Shore Temple": "https://commons.wikimedia.org/wiki/Special:FilePath/Shore_Temple_Mahabalipuram.jpg?width=1280",
+  "Fatehpur Sikri": "https://commons.wikimedia.org/wiki/Special:FilePath/Fatehpur_Sikri_Buland_Darwaza.jpg?width=1280",
   "Golden Temple Amritsar": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg/1280px-The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg",
   "Rameshwaram Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Rameshwaram_temple_%2811%29.jpg/1280px-Rameshwaram_temple_%2811%29.jpg",
-  "Gir National Park": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Lion_waiting_in_Namibia.jpg/1280px-Lion_waiting_in_Namibia.jpg",
-  "Sariska Tiger Reserve": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Tiger_in_Ranthambhore.jpg/1280px-Tiger_in_Ranthambhore.jpg",
+  "Gir National Park": "https://commons.wikimedia.org/wiki/Special:FilePath/Gir_lion.jpg?width=1280",
+  "Sariska Tiger Reserve": "https://commons.wikimedia.org/wiki/Special:FilePath/Sariska_Tiger_Reserve_Rajasthan.jpg?width=1280",
   "Auli Skiing": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Snow_in_Auli_03.jpg/1280px-Snow_in_Auli_03.jpg",
   "Tawang Monastery": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Tawang_Monastery_in_Arunachal_Pradesh.jpg/1280px-Tawang_Monastery_in_Arunachal_Pradesh.jpg",
-  "Pichwai Painting of Nathdwara": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Pichwai_painting_of_Shrinathji.jpg/1280px-Pichwai_painting_of_Shrinathji.jpg",
-  "Gond Tribal Art": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Gond_Painting_by_Ranveer_Singh_Shyam_at_Kamalanga.jpg/1280px-Gond_Painting_by_Ranveer_Singh_Shyam_at_Kamalanga.jpg",
+  "Pichwai Painting of Nathdwara": "https://commons.wikimedia.org/wiki/Special:FilePath/Shrinathji_Swaroop.png?width=1280",
+  "Gond Tribal Art": "https://commons.wikimedia.org/wiki/Special:FilePath/Gond_art.jpg?width=1280",
   "Hornbill Festival Nagaland": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Hornbill_Festival_2016.jpg/1280px-Hornbill_Festival_2016.jpg",
   "Kerala Boat Race": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Nehru_trophy_boat_race_2010.jpg/1280px-Nehru_trophy_boat_race_2010.jpg",
 };
@@ -94,21 +96,39 @@ interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
   fallback?: string;
 }
 
-const SafeImage = ({ fallback, alt, src, onError, ...props }: Props) => {
-  const [failed, setFailed] = useState(false);
+const SafeImage = ({ fallback, alt, src, onError, className, ...props }: Props) => {
+  const [stage, setStage] = useState<0 | 1 | 2>(0); // 0: original, 1: mapped fallback, 2: friendly placeholder
   const srcStr = typeof src === "string" ? src : "";
   const altStr = (alt as string) || "";
 
-  const useLocal = failed || !srcStr || oldImageIsFake(srcStr);
-  const finalSrc = useLocal ? (fallback || pickImage(altStr)) : srcStr;
+  const mapped = fallback || pickImage(altStr);
+  const startWithMapped = !srcStr || oldImageIsFake(srcStr);
+  const effectiveStage = startWithMapped && stage === 0 ? 1 : stage;
+  const finalSrc = effectiveStage === 1 ? mapped : srcStr;
+
+  if (effectiveStage === 2) {
+    return (
+      <div
+        className={`flex flex-col items-center justify-center bg-muted text-muted-foreground ${className ?? ""}`}
+        role="img"
+        aria-label={altStr || "Image unavailable"}
+      >
+        <ImageOff className="h-8 w-8 mb-2 opacity-60" />
+        <span className="text-xs px-3 text-center line-clamp-2">
+          {altStr || "Image unavailable"}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <img
       {...props}
+      className={className}
       alt={altStr}
       src={finalSrc}
       onError={(e) => {
-        setFailed(true);
+        setStage((s) => (s < 2 ? ((s + 1) as 0 | 1 | 2) : 2));
         onError?.(e);
       }}
     />
