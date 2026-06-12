@@ -65,6 +65,21 @@ const realImages: Record<string, string> = {
   "Valley of Flowers": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_01.jpg/1280px-Valley_of_flowers_national_park%2C_Uttarakhand%2C_India_01.jpg",
   "Rishikesh Adventure": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Ganga_Arti_at_Rishikesh.jpg/1280px-Ganga_Arti_at_Rishikesh.jpg",
   "Dudhsagar Falls": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Dudhsagar_Waterfall_%283231771809%29.jpg/1280px-Dudhsagar_Waterfall_%283231771809%29.jpg",
+  "Varkala Cliff Beach": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Varkala_beach_view.jpg/1280px-Varkala_beach_view.jpg",
+  "Marari Beach": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Mararikulam_Beach_2.jpg/1280px-Mararikulam_Beach_2.jpg",
+  "Diu Island Beaches": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Nagoa_Beach_Diu.jpg/1280px-Nagoa_Beach_Diu.jpg",
+  "Mahabalipuram Shore Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Shore_Temple_Group_of_monuments_at_Mahabalipuram_April_2019.jpg/1280px-Shore_Temple_Group_of_monuments_at_Mahabalipuram_April_2019.jpg",
+  "Fatehpur Sikri": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Fatehpur_Sikri-_Buland_Darwaza_gate_seen_from_outside_05.jpg/1280px-Fatehpur_Sikri-_Buland_Darwaza_gate_seen_from_outside_05.jpg",
+  "Golden Temple Amritsar": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg/1280px-The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg",
+  "Rameshwaram Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Rameshwaram_temple_%2811%29.jpg/1280px-Rameshwaram_temple_%2811%29.jpg",
+  "Gir National Park": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Lion_waiting_in_Namibia.jpg/1280px-Lion_waiting_in_Namibia.jpg",
+  "Sariska Tiger Reserve": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Tiger_in_Ranthambhore.jpg/1280px-Tiger_in_Ranthambhore.jpg",
+  "Auli Skiing": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Snow_in_Auli_03.jpg/1280px-Snow_in_Auli_03.jpg",
+  "Tawang Monastery": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Tawang_Monastery_in_Arunachal_Pradesh.jpg/1280px-Tawang_Monastery_in_Arunachal_Pradesh.jpg",
+  "Pichwai Painting of Nathdwara": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Pichwai_painting_of_Shrinathji.jpg/1280px-Pichwai_painting_of_Shrinathji.jpg",
+  "Gond Tribal Art": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Gond_Painting_by_Ranveer_Singh_Shyam_at_Kamalanga.jpg/1280px-Gond_Painting_by_Ranveer_Singh_Shyam_at_Kamalanga.jpg",
+  "Hornbill Festival Nagaland": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Hornbill_Festival_2016.jpg/1280px-Hornbill_Festival_2016.jpg",
+  "Kerala Boat Race": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Nehru_trophy_boat_race_2010.jpg/1280px-Nehru_trophy_boat_race_2010.jpg",
 };
 
 function pickImage(title: string) {
