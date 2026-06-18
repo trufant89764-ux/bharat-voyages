@@ -179,6 +179,7 @@ const TravelBookingSection = () => {
                     <input
                       type="date"
                       value={departDate}
+                      min={new Date().toISOString().split("T")[0]}
                       onChange={(e) => setDepartDate(e.target.value)}
                       className="bg-transparent outline-none text-sm text-foreground w-full font-medium"
                     />
@@ -193,6 +194,7 @@ const TravelBookingSection = () => {
                       <input
                         type="date"
                         value={returnDate}
+                        min={departDate || new Date().toISOString().split("T")[0]}
                         onChange={(e) => setReturnDate(e.target.value)}
                         className="bg-transparent outline-none text-sm text-foreground w-full font-medium"
                       />
