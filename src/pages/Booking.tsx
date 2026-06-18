@@ -179,7 +179,11 @@ const Booking = () => {
             </div>
             <div>
               <label className="text-sm font-medium text-foreground block mb-2">Travel Date</label>
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+              <input type="date" value={date} min={new Date().toISOString().split("T")[0]} onChange={(e) => {
+                const today = new Date().toISOString().split("T")[0];
+                if (e.target.value < today) { toast.error("Past dates are not allowed"); return; }
+                setDate(e.target.value);
+              }} className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
             <div>
               <label className="text-sm font-medium text-foreground block mb-2">Number of Travelers</label>
