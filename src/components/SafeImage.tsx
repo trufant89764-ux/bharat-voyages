@@ -72,7 +72,7 @@ const realImages: Record<string, string> = {
   "Diu Island Beaches": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Nagoa_Beach_Diu.jpg/1280px-Nagoa_Beach_Diu.jpg",
   "Mahabalipuram Shore Temple": "https://commons.wikimedia.org/wiki/Special:FilePath/Shore_Temple_Mahabalipuram.jpg?width=1280",
   "Fatehpur Sikri": "https://commons.wikimedia.org/wiki/Special:FilePath/Fatehpur_Sikri_Buland_Darwaza.jpg?width=1280",
-  "Golden Temple Amritsar": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg/1280px-The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg",
+  "Golden Temple Amritsar": "https://commons.wikimedia.org/wiki/Special:FilePath/Hamandir%20Sahib%20(Golden%20Temple).jpg?width=1280",
   "Rameshwaram Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Rameshwaram_temple_%2811%29.jpg/1280px-Rameshwaram_temple_%2811%29.jpg",
   "Gir National Park": "https://commons.wikimedia.org/wiki/Special:FilePath/Gir_lion.jpg?width=1280",
   "Sariska Tiger Reserve": "https://commons.wikimedia.org/wiki/Special:FilePath/Sariska_Tiger_Reserve_Rajasthan.jpg?width=1280",
