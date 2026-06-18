@@ -81,7 +81,7 @@ const realImages: Record<string, string> = {
   "Pichwai Painting of Nathdwara": "https://commons.wikimedia.org/wiki/Special:FilePath/Shrinathji_Swaroop.png?width=1280",
   "Gond Tribal Art": "https://commons.wikimedia.org/wiki/Special:FilePath/Gond_art.jpg?width=1280",
   "Hornbill Festival Nagaland": "https://commons.wikimedia.org/wiki/Special:FilePath/Hornbill%20Festival%20Nagaland%2001.jpg?width=1280",
-  "Kerala Boat Race": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Nehru_trophy_boat_race_2010.jpg/1280px-Nehru_trophy_boat_race_2010.jpg",
+  "Kerala Boat Race": "https://commons.wikimedia.org/wiki/Special:FilePath/Nehru%20Trophy%20Boat%20Race%202018.jpg?width=1280",
 };
 
 function pickImage(title: string) {
