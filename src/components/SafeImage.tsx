@@ -72,7 +72,7 @@ const realImages: Record<string, string> = {
   "Diu Island Beaches": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Nagoa_Beach_Diu.jpg/1280px-Nagoa_Beach_Diu.jpg",
   "Mahabalipuram Shore Temple": "https://commons.wikimedia.org/wiki/Special:FilePath/Shore_Temple_Mahabalipuram.jpg?width=1280",
   "Fatehpur Sikri": "https://commons.wikimedia.org/wiki/Special:FilePath/Fatehpur_Sikri_Buland_Darwaza.jpg?width=1280",
-  "Golden Temple Amritsar": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg/1280px-The_Golden_Temple_-Amritsar%2C_Punjab%2C_India_-_panoramio.jpg",
+  "Golden Temple Amritsar": "https://commons.wikimedia.org/wiki/Special:FilePath/Hamandir%20Sahib%20(Golden%20Temple).jpg?width=1280",
   "Rameshwaram Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Rameshwaram_temple_%2811%29.jpg/1280px-Rameshwaram_temple_%2811%29.jpg",
   "Gir National Park": "https://commons.wikimedia.org/wiki/Special:FilePath/Gir_lion.jpg?width=1280",
   "Sariska Tiger Reserve": "https://commons.wikimedia.org/wiki/Special:FilePath/Sariska_Tiger_Reserve_Rajasthan.jpg?width=1280",
@@ -80,8 +80,8 @@ const realImages: Record<string, string> = {
   "Tawang Monastery": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Tawang_Monastery_in_Arunachal_Pradesh.jpg/1280px-Tawang_Monastery_in_Arunachal_Pradesh.jpg",
   "Pichwai Painting of Nathdwara": "https://commons.wikimedia.org/wiki/Special:FilePath/Shrinathji_Swaroop.png?width=1280",
   "Gond Tribal Art": "https://commons.wikimedia.org/wiki/Special:FilePath/Gond_art.jpg?width=1280",
-  "Hornbill Festival Nagaland": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Hornbill_Festival_2016.jpg/1280px-Hornbill_Festival_2016.jpg",
-  "Kerala Boat Race": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Nehru_trophy_boat_race_2010.jpg/1280px-Nehru_trophy_boat_race_2010.jpg",
+  "Hornbill Festival Nagaland": "https://commons.wikimedia.org/wiki/Special:FilePath/Hornbill%20Festival%20Nagaland%2001.jpg?width=1280",
+  "Kerala Boat Race": "https://commons.wikimedia.org/wiki/Special:FilePath/Nehru%20Trophy%20Boat%20Race%202018.jpg?width=1280",
 };
 
 function pickImage(title: string) {
