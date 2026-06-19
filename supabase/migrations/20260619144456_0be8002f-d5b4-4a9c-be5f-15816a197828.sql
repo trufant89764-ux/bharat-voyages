@@ -1,0 +1,1 @@
+UPDATE public.destinations SET image = 'https://commons.wikimedia.org/wiki/Special:FilePath/Tawang%20Monastery.jpg?width=1280' WHERE title = 'Tawang Monastery';
