@@ -27,7 +27,16 @@ export const realImages: Record<string, string> = {
   "Spiti Valley": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Kee_monastery_Spiti_Valley_%28edited%29.jpg",
   "Auli Skiing": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Snow_in_Auli_03.jpg/1280px-Snow_in_Auli_03.jpg",
   "Rishikesh Adventure": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Ganga_Arti_at_Rishikesh.jpg/1280px-Ganga_Arti_at_Rishikesh.jpg",
-  "Tawang Monastery": "https://commons.wikimedia.org/wiki/Special:FilePath/Tawang%20Monastery.jpg?width=1280",
+  "Phawngpui Blue Mountain": "https://commons.wikimedia.org/wiki/Special:FilePath/Phawngpui.jpg?width=1280",
+  "Ziro Valley": "https://commons.wikimedia.org/wiki/Special:FilePath/Ziro%20Valley%20Arunachal%20Pradesh.jpg?width=1280",
+  "Red Fort Delhi": "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20Fort%20in%20Delhi%2003-2016.jpg?width=1280",
+  "Sultanpur Bird Sanctuary": "https://commons.wikimedia.org/wiki/Special:FilePath/Sultanpur%20National%20Park%2002.jpg?width=1280",
+  "Hundru Falls Ranchi": "https://commons.wikimedia.org/wiki/Special:FilePath/Hundru%20Falls%20Ranchi%20Jharkhand.jpg?width=1280",
+  "Loktak Lake": "https://commons.wikimedia.org/wiki/Special:FilePath/Loktak%20lake.jpg?width=1280",
+  "Charminar Hyderabad": "https://commons.wikimedia.org/wiki/Special:FilePath/Charminar-Pride%20of%20Hyderabad.jpg?width=1280",
+  "Ujjayanta Palace Agartala": "https://commons.wikimedia.org/wiki/Special:FilePath/Ujjayanta%20Palace%20front%20view.jpg?width=1280",
+  "Rock Garden Chandigarh": "https://commons.wikimedia.org/wiki/Special:FilePath/Rock%20Garden%20Chandigarh%20India.jpg?width=1280",
+  "Agatti Island Lakshadweep": "https://commons.wikimedia.org/wiki/Special:FilePath/Agatti%20Island%20Aerial%20View.jpg?width=1280",
 
   // Heritage & Spiritual
   "Pondicherry French Quarter": "https://upload.wikimedia.org/wikipedia/commons/1/17/Pondicherry-French_Quarter-WUS02277.jpg",
