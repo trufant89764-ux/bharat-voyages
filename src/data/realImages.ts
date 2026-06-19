@@ -27,7 +27,7 @@ export const realImages: Record<string, string> = {
   "Spiti Valley": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Kee_monastery_Spiti_Valley_%28edited%29.jpg",
   "Auli Skiing": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Snow_in_Auli_03.jpg/1280px-Snow_in_Auli_03.jpg",
   "Rishikesh Adventure": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Ganga_Arti_at_Rishikesh.jpg/1280px-Ganga_Arti_at_Rishikesh.jpg",
-  "Tawang Monastery": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Tawang_Monastery_in_Arunachal_Pradesh.jpg/1280px-Tawang_Monastery_in_Arunachal_Pradesh.jpg",
+  "Tawang Monastery": "https://commons.wikimedia.org/wiki/Special:FilePath/Tawang%20Monastery.jpg?width=1280",
 
   // Heritage & Spiritual
   "Pondicherry French Quarter": "https://upload.wikimedia.org/wikipedia/commons/1/17/Pondicherry-French_Quarter-WUS02277.jpg",
