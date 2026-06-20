@@ -103,6 +103,12 @@ export const realImages: Record<string, string> = {
   "Hemis Festival Ladakh": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Hemis_monastery_festival_II.jpg/1280px-Hemis_monastery_festival_II.jpg",
   "Losar Tibetan New Year": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Monk_Dancing_at_the_Tibetan_Losar_%28New_Year%29.jpg",
   "Kerala Boat Race": "https://commons.wikimedia.org/wiki/Special:FilePath/Nehru%20Trophy%20Boat%20Race%202018.jpg?width=1280",
+  "Goa Carnival": "https://commons.wikimedia.org/wiki/Special:FilePath/Carnival%20in%20Goa%20-%20Panjim%202019%20-%20Picture%203.jpg?width=1280",
+  "Chhath Puja Bihar": "https://commons.wikimedia.org/wiki/Special:FilePath/Chhath%20Puja.jpg?width=1280",
+  "Bastar Dussehra": "https://commons.wikimedia.org/wiki/Special:FilePath/Famous%20Dussehra%20Bastar%20Jagdalpur%20Chhattisgarh.jpg?width=1280",
+  "Chapchar Kut Mizoram": "https://commons.wikimedia.org/wiki/Special:FilePath/Chapchar%20Kut%202023.jpg?width=1280",
+  "Jaisalmer Desert Festival": "https://commons.wikimedia.org/wiki/Special:FilePath/04%20DesertFestival.jpg?width=1280",
+  "Khajuraho Dance Festival": "https://commons.wikimedia.org/wiki/Special:FilePath/Khajuraho%20Dance%20Festival.jpg?width=1280",
 };
 
 /** Look up a verified fallback image by title. */
