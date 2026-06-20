@@ -7,8 +7,8 @@ export const realImages: Record<string, string> = {
   "Gokarna Beaches": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Delight_india.jpg",
   "Andaman Islands": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Radha_Nagar_beach%2C_Havelock_Island%2C_Andamn%2C_India-_Sun_set_view.jpg/1280px-Radha_Nagar_beach%2C_Havelock_Island%2C_Andamn%2C_India-_Sun_set_view.jpg",
   "Varkala Cliff Beach": "https://commons.wikimedia.org/wiki/Special:FilePath/Varkala_Beach_2.jpg?width=1280",
-  "Marari Beach": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Mararikulam_Beach_2.jpg/1280px-Mararikulam_Beach_2.jpg",
-  "Diu Island Beaches": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Nagoa_Beach_Diu.jpg/1280px-Nagoa_Beach_Diu.jpg",
+  "Marari Beach": "https://commons.wikimedia.org/wiki/Special:FilePath/Marari%20Beach.jpg?width=1280",
+  "Diu Island Beaches": "https://commons.wikimedia.org/wiki/Special:FilePath/Nagoa%20Beach%2C%20Diu.jpg?width=1280",
 
   // Backwaters & Nature
   "Kerala Backwaters": "https://upload.wikimedia.org/wikipedia/commons/e/ee/House_Boat_DSW.jpg",
@@ -25,18 +25,18 @@ export const realImages: Record<string, string> = {
   "Manali Valley": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Solang_Valley_%2CManali%2C_Himachal_Pardes%2C_India.JPG/1280px-Solang_Valley_%2CManali%2C_Himachal_Pardes%2C_India.JPG",
   "Darjeeling Hills": "https://upload.wikimedia.org/wikipedia/commons/9/96/DarjeelingTrainFruitshop_%282%29.jpg",
   "Spiti Valley": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Kee_monastery_Spiti_Valley_%28edited%29.jpg",
-  "Auli Skiing": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Snow_in_Auli_03.jpg/1280px-Snow_in_Auli_03.jpg",
+  "Auli Skiing": "https://commons.wikimedia.org/wiki/Special:FilePath/Auli%20hill%20station.jpg?width=1280",
   "Rishikesh Adventure": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Ganga_Arti_at_Rishikesh.jpg/1280px-Ganga_Arti_at_Rishikesh.jpg",
-  "Phawngpui Blue Mountain": "https://commons.wikimedia.org/wiki/Special:FilePath/Phawngpui.jpg?width=1280",
+  "Phawngpui Blue Mountain": "https://commons.wikimedia.org/wiki/Special:FilePath/Phawngpui%20national%20park.jpg?width=1280",
   "Ziro Valley": "https://commons.wikimedia.org/wiki/Special:FilePath/Ziro%20Valley%20Arunachal%20Pradesh.jpg?width=1280",
-  "Red Fort Delhi": "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20Fort%20in%20Delhi%2003-2016.jpg?width=1280",
-  "Sultanpur Bird Sanctuary": "https://commons.wikimedia.org/wiki/Special:FilePath/Sultanpur%20National%20Park%2002.jpg?width=1280",
-  "Hundru Falls Ranchi": "https://commons.wikimedia.org/wiki/Special:FilePath/Hundru%20Falls%20Ranchi%20Jharkhand.jpg?width=1280",
+  "Red Fort Delhi": "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20Fort%20in%20Delhi%2003-2016%20img3.jpg?width=1280",
+  "Sultanpur Bird Sanctuary": "https://commons.wikimedia.org/wiki/Special:FilePath/Sultanpur%20National%20Park%20on%20a%20foggy%20morning.jpg?width=1280",
+  "Hundru Falls Ranchi": "https://commons.wikimedia.org/wiki/Special:FilePath/Hundru%20Falls%2C%20Jharkhand%2C%20India.jpg?width=1280",
   "Loktak Lake": "https://commons.wikimedia.org/wiki/Special:FilePath/Loktak%20lake.jpg?width=1280",
   "Charminar Hyderabad": "https://commons.wikimedia.org/wiki/Special:FilePath/Charminar-Pride%20of%20Hyderabad.jpg?width=1280",
-  "Ujjayanta Palace Agartala": "https://commons.wikimedia.org/wiki/Special:FilePath/Ujjayanta%20Palace%20front%20view.jpg?width=1280",
-  "Rock Garden Chandigarh": "https://commons.wikimedia.org/wiki/Special:FilePath/Rock%20Garden%20Chandigarh%20India.jpg?width=1280",
-  "Agatti Island Lakshadweep": "https://commons.wikimedia.org/wiki/Special:FilePath/Agatti%20Island%20Aerial%20View.jpg?width=1280",
+  "Ujjayanta Palace Agartala": "https://commons.wikimedia.org/wiki/Special:FilePath/Ujjayanta%20Palace.jpg?width=1280",
+  "Rock Garden Chandigarh": "https://commons.wikimedia.org/wiki/Special:FilePath/Rock%20Garden%20Chandigarh.jpg?width=1280",
+  "Agatti Island Lakshadweep": "https://commons.wikimedia.org/wiki/Special:FilePath/Lakshadweep%20-%20Agatti%20Islands.jpg?width=1280",
 
   // Heritage & Spiritual
   "Pondicherry French Quarter": "https://upload.wikimedia.org/wikipedia/commons/1/17/Pondicherry-French_Quarter-WUS02277.jpg",
@@ -55,7 +55,7 @@ export const realImages: Record<string, string> = {
   "Mahabalipuram Shore Temple": "https://commons.wikimedia.org/wiki/Special:FilePath/Shore_Temple_Mahabalipuram.jpg?width=1280",
   "Fatehpur Sikri": "https://commons.wikimedia.org/wiki/Special:FilePath/Fatehpur_Sikri_Buland_Darwaza.jpg?width=1280",
   "Golden Temple Amritsar": "https://commons.wikimedia.org/wiki/Special:FilePath/Hamandir%20Sahib%20(Golden%20Temple).jpg?width=1280",
-  "Rameshwaram Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Rameshwaram_temple_%2811%29.jpg/1280px-Rameshwaram_temple_%2811%29.jpg",
+  "Rameshwaram Temple": "https://commons.wikimedia.org/wiki/Special:FilePath/Ramanathaswamy%20Temple.jpg?width=1280",
 
   // Wildlife
   "Bandhavgarh Tiger Reserve": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Bengal_tiger_in_Bandhavgarh_National_Park_01.jpg",
