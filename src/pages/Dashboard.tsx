@@ -20,6 +20,11 @@ interface BookingRow {
 interface Profile {
   name: string;
   avatar_url: string | null;
+  age: number | null;
+  place: string | null;
+  phone: string | null;
+  gender: string | null;
+  bio: string | null;
 }
 
 const Dashboard = () => {
@@ -29,7 +34,7 @@ const Dashboard = () => {
   const [tab, setTab] = useState<"bookings" | "profile">("bookings");
 
   // Profile state
-  const [profile, setProfile] = useState<Profile>({ name: "", avatar_url: null });
+  const [profile, setProfile] = useState<Profile>({ name: "", avatar_url: null, age: null, place: null, phone: null, gender: null, bio: null });
   const [profileLoading, setProfileLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -49,7 +54,7 @@ const Dashboard = () => {
       logger.request("GET", "profiles", { user_id: user.id });
       const { data: pData } = await supabase
         .from("profiles")
-        .select("name, avatar_url")
+        .select("name, avatar_url, age, place, phone, gender, bio")
         .eq("user_id", user.id)
         .single();
       if (pData) setProfile(pData as Profile);
@@ -67,7 +72,15 @@ const Dashboard = () => {
 
     const { error } = await supabase
       .from("profiles")
-      .update({ name: profile.name, avatar_url: profile.avatar_url })
+      .update({
+        name: profile.name,
+        avatar_url: profile.avatar_url,
+        age: profile.age,
+        place: profile.place,
+        phone: profile.phone,
+        gender: profile.gender,
+        bio: profile.bio,
+      })
       .eq("user_id", user.id);
 
     if (error) {
@@ -126,6 +139,37 @@ const Dashboard = () => {
             <div>
               <label className="text-xs text-muted-foreground block mb-1">Email</label>
               <input type="email" value={user?.email || ""} disabled className="w-full px-3 py-2 rounded-lg bg-muted border border-border text-sm text-muted-foreground cursor-not-allowed" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1">Age</label>
+                <input type="number" min={1} max={120} value={profile.age ?? ""} onChange={(e) => setProfile({ ...profile, age: e.target.value ? Number(e.target.value) : null })} placeholder="e.g. 28" className="w-full px-3 py-2 rounded-lg bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground block mb-1">Gender</label>
+                <select value={profile.gender ?? ""} onChange={(e) => setProfile({ ...profile, gender: e.target.value || null })} className="w-full px-3 py-2 rounded-lg bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option value="">Prefer not to say</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1">Place / City</label>
+              <input type="text" value={profile.place ?? ""} onChange={(e) => setProfile({ ...profile, place: e.target.value || null })} placeholder="e.g. Mumbai, India" className="w-full px-3 py-2 rounded-lg bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1">Phone</label>
+              <input type="tel" value={profile.phone ?? ""} onChange={(e) => setProfile({ ...profile, phone: e.target.value || null })} placeholder="+91 98xxxxxxx" className="w-full px-3 py-2 rounded-lg bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1">Bio</label>
+              <textarea rows={3} value={profile.bio ?? ""} onChange={(e) => setProfile({ ...profile, bio: e.target.value || null })} placeholder="Tell us a bit about your travel style..." className="w-full px-3 py-2 rounded-lg bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none" />
             </div>
 
             <button onClick={handleProfileSave} disabled={saving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl gold-gradient text-accent-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
