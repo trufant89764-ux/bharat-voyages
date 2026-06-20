@@ -55,7 +55,7 @@ export const realImages: Record<string, string> = {
   "Mahabalipuram Shore Temple": "https://commons.wikimedia.org/wiki/Special:FilePath/Shore_Temple_Mahabalipuram.jpg?width=1280",
   "Fatehpur Sikri": "https://commons.wikimedia.org/wiki/Special:FilePath/Fatehpur_Sikri_Buland_Darwaza.jpg?width=1280",
   "Golden Temple Amritsar": "https://commons.wikimedia.org/wiki/Special:FilePath/Hamandir%20Sahib%20(Golden%20Temple).jpg?width=1280",
-  "Rameshwaram Temple": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Rameshwaram_temple_%2811%29.jpg/1280px-Rameshwaram_temple_%2811%29.jpg",
+  "Rameshwaram Temple": "https://commons.wikimedia.org/wiki/Special:FilePath/Ramanathaswamy%20Temple.jpg?width=1280",
 
   // Wildlife
   "Bandhavgarh Tiger Reserve": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Bengal_tiger_in_Bandhavgarh_National_Park_01.jpg",
