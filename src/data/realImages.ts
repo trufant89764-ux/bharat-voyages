@@ -7,8 +7,8 @@ export const realImages: Record<string, string> = {
   "Gokarna Beaches": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Delight_india.jpg",
   "Andaman Islands": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Radha_Nagar_beach%2C_Havelock_Island%2C_Andamn%2C_India-_Sun_set_view.jpg/1280px-Radha_Nagar_beach%2C_Havelock_Island%2C_Andamn%2C_India-_Sun_set_view.jpg",
   "Varkala Cliff Beach": "https://commons.wikimedia.org/wiki/Special:FilePath/Varkala_Beach_2.jpg?width=1280",
-  "Marari Beach": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Mararikulam_Beach_2.jpg/1280px-Mararikulam_Beach_2.jpg",
-  "Diu Island Beaches": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Nagoa_Beach_Diu.jpg/1280px-Nagoa_Beach_Diu.jpg",
+  "Marari Beach": "https://commons.wikimedia.org/wiki/Special:FilePath/Marari%20Beach.jpg?width=1280",
+  "Diu Island Beaches": "https://commons.wikimedia.org/wiki/Special:FilePath/Nagoa%20Beach%2C%20Diu.jpg?width=1280",
 
   // Backwaters & Nature
   "Kerala Backwaters": "https://upload.wikimedia.org/wikipedia/commons/e/ee/House_Boat_DSW.jpg",
